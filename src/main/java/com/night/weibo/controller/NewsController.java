@@ -63,6 +63,13 @@ public class NewsController {
     public Result<List<News>> getByUserId(@PathVariable Integer userId) {
         return ResultUtils.success(newsService.findByUserId(userId));
     }
+
+    @PostMapping("news/like/{id}")
+    public Result<Object> like(Integer id) {
+        News news = newsService.findById(id);
+        news.setNewsId(news.getNewsId() == null ? 1 : news.getNewsId() + 1);
+        return ResultUtils.success(newsService.save(news));
+    }
 //
 //    @PostMapping("/create")
 //    public Result<News> create(@Valid News news, BindingResult bindingResult) {

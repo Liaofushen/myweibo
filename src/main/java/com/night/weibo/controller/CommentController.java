@@ -38,7 +38,7 @@ public class CommentController {
      */
     @GetMapping("/{commentId}")
     public Result<Comment> getByCommentId(@PathVariable Integer commentId) {
-        if (commentService.hasId(commentId)) {
+        if (!commentService.hasId(commentId)) {
             return ResultUtils.error("commentId不存在");
         } else {
             return ResultUtils.success(commentService.findById(commentId));

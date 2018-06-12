@@ -33,8 +33,8 @@ public class GlobalFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         response.setContentType("text/html;charset=" + encode); //--解决响应乱码
         //--包装改造request中和获取请求参数相关的方法解决请求参数乱码
-        //chain.doFilter(new MyHttpServletRequest((HttpServletRequest) request), response);
-        chain.doFilter(request, response);
+        chain.doFilter(new MyHttpServletRequest((HttpServletRequest) request), response);
+        //chain.doFilter(request, response);
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {

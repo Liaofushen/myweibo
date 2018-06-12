@@ -38,6 +38,7 @@ public class News implements Serializable {
     private String newsText; //微博内容
     private String newsPhoto; //微博图片路径
     private Timestamp newsTime; //微博发表时间
+    private Integer newsLike;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
