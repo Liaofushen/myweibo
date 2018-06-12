@@ -3,6 +3,8 @@ package com.night.weibo.controller;
 import com.night.weibo.domain.Comment;
 import com.night.weibo.domain.Result;
 import com.night.weibo.service.CommentService;
+import com.night.weibo.service.NewsService;
+import com.night.weibo.service.UserService;
 import com.night.weibo.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -28,6 +30,10 @@ import java.sql.Timestamp;
 public class CommentController {
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private NewsService newsService;
 
     /**
      * 根据commentId查找一comment
@@ -63,11 +69,16 @@ public class CommentController {
      * @return Json
      */
     @PostMapping("/create")
-    public Result create(@Valid Comment comment, BindingResult bindingResult) {
+    public Result create(
+            @Valid Comment comment,
+            @RequestParam("newsId") Integer newsId,
+            @RequestParam("userId") Integer userId,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         }
-
+        comment.setUser(userService.findById(userId));
+        comment.setNews(newsService.findById(newsId));
         comment.setCommentTime(new Timestamp(System.currentTimeMillis()));
         return ResultUtils.success(commentService.save(comment));
     }
