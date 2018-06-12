@@ -77,24 +77,24 @@ public class UserController {
         return ResultUtils.success();
     }
 
-    /**
-     * 用户注册或修改资料，无上传头像时
-     * @param user
-     * @param bindingResult
-     * @return
-     */
-    @PostMapping(value = {"/register", "/update"})
-    public Result<User> register(@Valid User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
-        } else if (userService.hasId(user.getUserId())) {
-            return ResultUtils.error("该用户名已经存在");
-        } else {
-            user.setUserPhoto(PhotoUtils.save());
-            user.setUserTime(new Timestamp(System.currentTimeMillis()));
-            return ResultUtils.success(userService.save(user));
-        }
-    }
+//    /**
+//     * 用户注册或修改资料，无上传头像时
+//     * @param user
+//     * @param bindingResult
+//     * @return
+//     */
+//    @PostMapping(value = {"/register", "/update"})
+//    public Result<User> register(@Valid User user, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
+//        } else if (userService.hasId(user.getUserId())) {
+//            return ResultUtils.error("该用户名已经存在");
+//        } else {
+//            user.setUserPhoto(PhotoUtils.save());
+//            user.setUserTime(new Timestamp(System.currentTimeMillis()));
+//            return ResultUtils.success(userService.save(user));
+//        }
+//    }
     /**
      * 用户注册或修改资料，有上传头像时
      * @param user
@@ -110,6 +110,7 @@ public class UserController {
         } else {
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
             user.setUserTime(new Timestamp(System.currentTimeMillis()));
+
             return ResultUtils.success(userService.save(user));
         }
     }

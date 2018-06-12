@@ -20,34 +20,34 @@ import java.util.List;
  * @UpdateRemark: The modified content
  * @Version: 1.0
  */
-@Service
+//@Service
 public class CommentService {
-    @Autowired
-    private CommentDao commentDao;
-
-    public boolean hasId(Integer id) {
-        return commentDao.findById(id).isPresent();
-    }
-
-    public Comment findById(Integer id) {
-        return commentDao.findById(id).orElse(new Comment());
-    }
-
-    @Transactional
-    public Comment save(Comment comment) {
-        return commentDao.save(comment);
-    }
-
-    public List<Comment> findByNewsId(Integer newsId) {
-        return commentDao.findByNewsId(newsId);
-    }
-
-    public void delete(Integer id) {
-        commentDao.deleteById(id);
-    }
-
-    public void delete(Comment comment) {
-        commentDao.delete(comment);
-    }
+//    @Autowired
+//    private CommentDao commentDao;
+//
+//    public boolean hasId(Integer id) {
+//        return commentDao.findById(id).isPresent();
+//    }
+//
+//    public Comment findById(Integer id) {
+//        return commentDao.findById(id).orElse(new Comment());
+//    }
+//
+//    @Transactional
+//    public Comment save(Comment comment) {
+//        return commentDao.save(comment);
+//    }
+//
+//    public List<Comment> findByNewsId(Integer newsId) {
+//        return commentDao.findByNewsId(newsId);
+//    }
+//
+//    public void delete(Integer id) {
+//        commentDao.deleteById(id);
+//    }
+//
+//    public void delete(Comment comment) {
+//        commentDao.delete(comment);
+//    }
 
 }

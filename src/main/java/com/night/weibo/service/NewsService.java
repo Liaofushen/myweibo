@@ -21,39 +21,39 @@ import java.util.Optional;
  * @UpdateRemark: The modified content
  * @Version: 1.0
  */
-@Service
+//Service
 public class NewsService {
-    @Autowired
-    private NewsDao newsDao;
-
-    public News findById(Integer id) {
-        return newsDao.findById(id).orElse(new News());
-    }
-
-    public boolean hasId(Integer id) {
-        return newsDao.findById(id).isPresent();
-    }
-
-    public List<News> findAll() {
-        return newsDao.findAll();
-    }
-
-    @Transactional
-    public News save(News news) {
-        return newsDao.save(news);
-    }
-
-    @Transactional
-    public void delete(Integer id) {
-        newsDao.deleteById(id);
-    }
-
-    public void delete(News news) {
-        newsDao.delete(news);
-    }
-
-    public List<News> findByUserId(Integer userId) {
-        return newsDao.findByUserId(userId);
-    }
+//    @Autowired
+//    private NewsDao newsDao;
+//
+//    public News findById(Integer id) {
+//        return newsDao.findById(id).orElse(new News());
+//    }
+//
+//    public boolean hasId(Integer id) {
+//        return newsDao.findById(id).isPresent();
+//    }
+//
+//    public List<News> findAll() {
+//        return newsDao.findAll();
+//    }
+//
+//    @Transactional
+//    public News save(News news) {
+//        return newsDao.save(news);
+//    }
+//
+//    @Transactional
+//    public void delete(Integer id) {
+//        newsDao.deleteById(id);
+//    }
+//
+//    public void delete(News news) {
+//        newsDao.delete(news);
+//    }
+//
+//    public List<News> findByUserId(Integer userId) {
+//        return newsDao.findByUserId(userId);
+//    }
 
 }

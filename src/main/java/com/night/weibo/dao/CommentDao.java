@@ -20,15 +20,15 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface CommentDao extends JpaRepository<Comment, Integer> {
-    @Query(value = "SELECT " +
-            "comment_id, " +
-            "comment_text, " +
-            "comment_time, " +
-            "news_id, " +
-            "user_id " +
-            "FROM " +
-            "comment " +
-            "WHERE " +
-            "news_id = :newsId")
-    List<Comment> findByNewsId(@Param("newsId") Integer newsId);
+//    @Query(value = "SELECT " +
+//            "commentId, " +
+//            "commentText, " +
+//            "commentTime, " +
+//            "newsId, " +
+//            "userId " +
+//            "FROM " +
+//            "comment " +
+//            "WHERE " +
+//            "newsId = ?1 ")
+//    List<Comment> findByNewsId(Integer newsId);
 }

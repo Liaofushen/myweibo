@@ -2,6 +2,8 @@ package com.night.weibo.dao;
 
 import com.night.weibo.domain.News;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,5 +21,15 @@ import java.util.Optional;
  * @Version: 1.0
  */
 public interface NewsDao extends JpaRepository<News, Integer> {
-    List<News> findByUserId(Integer userId);
+//    @Query(value = "SELECT " +
+//            "newsId, " +
+//            "newsPhoto, " +
+//            "newsText, " +
+//            "newsTime, " +
+//            "userId " +
+//            "FROM " +
+//            "News news " +
+//            "WHERE " +
+//            "userId = ?1 ")
+//    List<News> findByUserId(Integer userId);
 }
