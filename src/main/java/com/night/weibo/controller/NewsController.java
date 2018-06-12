@@ -3,6 +3,7 @@ package com.night.weibo.controller;
 import com.night.weibo.domain.News;
 import com.night.weibo.domain.Result;
 import com.night.weibo.service.NewsService;
+import com.night.weibo.service.UserService;
 import com.night.weibo.utils.PhotoUtils;
 import com.night.weibo.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.util.List;
 
 /**
  * @ProjectName: weibo
@@ -32,8 +32,12 @@ public class NewsController {
     @Autowired
     private NewsService newsService;
 
+    @Autowired
+    private UserService userService;
+
     /**
      * 返回全部news
+     *
      * @return
      */
     @GetMapping("/all")
@@ -43,6 +47,7 @@ public class NewsController {
 
     /**
      * 根据newsId, 返回一条news
+     *
      * @param newsId
      * @return
      */
@@ -56,6 +61,7 @@ public class NewsController {
 
     /**
      * 根据userId, 返回某user的全部news
+     *
      * @param userId
      * @return
      */
@@ -71,22 +77,19 @@ public class NewsController {
         return ResultUtils.success(newsService.save(news));
     }
 
-//    @PostMapping("/create")
-//    public Result<News> create(@Valid News news, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
-//        }
-//        news.setNewsTime(new Timestamp(System.currentTimeMillis()));
-//        return ResultUtils.success(newsService.save(news));
-//    }
-//
-    @PostMapping(value = {"/create", "/update"})
-    public Result create(@Valid News news, MultipartFile file, BindingResult bindingResult) {
+    @PostMapping("/create")
+    public Result create(
+            @Valid News news,
+            @RequestParam("photo") MultipartFile file,
+            @RequestParam("userId") Integer userId,
+            BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         }
-        news = newsService.save(news);
-        news.setNewsPhoto(PhotoUtils.save(file, news.getNewsId()));
+        news.setNewsLike(0);
+        news.setUser(userService.findById(userId));
+        news.setNewsPhoto(PhotoUtils.save(file, userId));
         news.setNewsTime(new Timestamp(System.currentTimeMillis()));
         return ResultUtils.success(newsService.save(news));
     }

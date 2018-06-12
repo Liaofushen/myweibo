@@ -1,12 +1,14 @@
 package com.night.weibo.utils;
 
 import org.springframework.http.HttpRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * @ProjectName: weibo
@@ -22,6 +24,7 @@ import java.io.IOException;
  */
 public class PhotoUtils {
     private static String url = "localhost:8080/user_images/";
+    private static Random random = new Random();
 
     public static String urlPre() {
         File path = null;
@@ -38,7 +41,7 @@ public class PhotoUtils {
 
     public static String save(MultipartFile file, Integer id) {
         String path = urlPre();
-        String filename = "head-" + id + ".jpg";
+        String filename = System.currentTimeMillis() + "_" + random.nextInt(100000) + ".jpg";
 
         File filepath = new File(path, filename);
         //判断路径是否存在，如果不存在就创建一个
@@ -51,7 +54,7 @@ public class PhotoUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return url + "head-" + id + ".jpg";
+        return url + filename;
     }
 
 }

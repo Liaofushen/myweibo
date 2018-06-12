@@ -79,13 +79,13 @@ public class UserController {
     }
 
     /**
-     * 用户注册或修改资料，有上传头像时
+     * 用户注册，有上传头像时
      *
      * @param user
      * @param bindingResult
      * @return
      */
-    @PostMapping(value = {"/register", "/update"})
+    @PostMapping("/register")
     public Result register(@Valid User user, @RequestParam("photo") MultipartFile file, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
@@ -93,7 +93,24 @@ public class UserController {
             return ResultUtils.error("该用户账号已经存在");
         } else {
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
-            if (user.getUserPhoto() == null) user.setUserTime(new Timestamp(System.currentTimeMillis()));
+            if (user.getUserTime() == null) user.setUserTime(new Timestamp(System.currentTimeMillis()));
+            return ResultUtils.success(userService.save(user));
+        }
+    }
+    /**
+     * 修改资料，有上传头像时
+     *
+     * @param user
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("/update")
+    public Result update(@Valid User user, @RequestParam("photo") MultipartFile file, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
+        } else {
+            user.setUserTime(userService.findById(user.getUserId()).getUserTime());
+            user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
             return ResultUtils.success(userService.save(user));
         }
     }
