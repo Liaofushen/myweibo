@@ -12,11 +12,15 @@
                     "http://localhost:8080/user/all",
                     function (data, status) {
                         //console.log(data);
+                        var htm = "<br><br>------------------------------------------------------------<br>";
+                        htm += "status: " +  data.status + "<br>";
+                        htm += "msg : " + data.msg + "<br>";
+                        htm += "data: " + "<br>";
+                        htm += "<table><thead><tr><th>userId</th><th>userName</th><th>userPass</th></tr></thead><tbody>";
+
                         var item = data.data;
                         console.log(item);
 
-                        var htm = "";
-                        htm += "<table><thead><tr><th>userId</th><th>userName</th><th>userPass</th></tr></thead><tbody>";
                         for (var i = 0; i < item.length; i++) {
 
                             //console.log(item[i].name);
