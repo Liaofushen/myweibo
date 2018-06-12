@@ -70,7 +70,7 @@ public class NewsController {
         news.setNewsLike(news.getNewsLike() == null ? 1 : news.getNewsLike() + 1);
         return ResultUtils.success(newsService.save(news));
     }
-//
+
 //    @PostMapping("/create")
 //    public Result<News> create(@Valid News news, BindingResult bindingResult) {
 //        if (bindingResult.hasErrors()) {

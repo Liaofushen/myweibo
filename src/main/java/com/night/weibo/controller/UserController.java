@@ -2,13 +2,11 @@ package com.night.weibo.controller;
 
 import com.night.weibo.domain.Result;
 import com.night.weibo.domain.User;
-import com.night.weibo.service.NewsService;
 import com.night.weibo.service.UserService;
 import com.night.weibo.utils.PhotoUtils;
 import com.night.weibo.utils.ResultUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +41,7 @@ public class UserController {
 
     /**
      * 用户登录
+     *
      * @param userId
      * @param userPass
      * @return
@@ -68,6 +67,7 @@ public class UserController {
 
     /**
      * 用户注销登录
+     *
      * @return
      */
     @GetMapping("/logout")
@@ -78,46 +78,29 @@ public class UserController {
         return ResultUtils.success();
     }
 
-//    /**
-//     * 用户注册或修改资料，无上传头像时
-//     * @param user
-//     * @param bindingResult
-//     * @return
-//     */
-//    @PostMapping(value = {"/register", "/update"})
-//    public Result<User> register(@Valid User user, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
-//        } else if (userService.hasId(user.getUserId())) {
-//            return ResultUtils.error("该用户名已经存在");
-//        } else {
-//            user.setUserPhoto(PhotoUtils.save());
-//            user.setUserTime(new Timestamp(System.currentTimeMillis()));
-//            return ResultUtils.success(userService.save(user));
-//        }
-//    }
-
     /**
      * 用户注册或修改资料，有上传头像时
+     *
      * @param user
      * @param bindingResult
      * @return
      */
     @PostMapping(value = {"/register", "/update"})
-    public Result register(@Valid User user, MultipartFile file, BindingResult bindingResult) {
+    public Result register(@Valid User user, @RequestParam("photo") MultipartFile file, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         } else if (userService.hasId(user.getUserId())) {
             return ResultUtils.error("该用户账号已经存在");
         } else {
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
-            user.setUserTime(new Timestamp(System.currentTimeMillis()));
+            if (user.getUserPhoto() == null) user.setUserTime(new Timestamp(System.currentTimeMillis()));
             return ResultUtils.success(userService.save(user));
         }
     }
 
     /**
      * 返回所有user
+     *
      * @return
      */
     @GetMapping("/all")
@@ -128,6 +111,7 @@ public class UserController {
 
     /**
      * 根据userId，返回一个user
+     *
      * @param id
      * @return
      */
@@ -143,6 +127,7 @@ public class UserController {
 
     /**
      * 根据key返回对应的session
+     *
      * @param key
      * @return
      */

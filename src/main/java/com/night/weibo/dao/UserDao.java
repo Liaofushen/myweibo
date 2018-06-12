@@ -3,8 +3,6 @@ package com.night.weibo.dao;
 import com.night.weibo.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 /**
  * @ProjectName: weibo
  * @Package: com.night.weibo.dao

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.util.List;
 
 /**
  * @ProjectName: weibo
@@ -34,7 +33,7 @@ public class CommentController {
      * 根据commentId查找一comment
      *
      * @param commentId
-     * @return
+     * @return Json
      */
     @GetMapping("/{commentId}")
     public Result getByCommentId(@PathVariable Integer commentId) {
@@ -49,7 +48,7 @@ public class CommentController {
      * 查找某条news下的所有comments
      *
      * @param newsId
-     * @return
+     * @return Json
      */
     @GetMapping("/news/{newsId}")
     public Result getByNewsId(@PathVariable Integer newsId) {
@@ -61,7 +60,7 @@ public class CommentController {
      *
      * @param comment
      * @param bindingResult
-     * @return
+     * @return Json
      */
     @PostMapping("/create")
     public Result create(@Valid Comment comment, BindingResult bindingResult) {
@@ -77,7 +76,7 @@ public class CommentController {
      * 根据commentId删除
      *
      * @param commentId
-     * @return
+     * @return Json
      */
     @PostMapping("/delete/{commentId}")
     public Result delete(@PathVariable Integer commentId) {
