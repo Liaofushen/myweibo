@@ -31,7 +31,7 @@ public class News implements Serializable {
     private static final long serialVersionUID = 8763354922350989214L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer newsId;
     private String newsText; //微博内容
     private String newsPhoto; //微博图片路径

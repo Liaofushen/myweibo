@@ -28,7 +28,7 @@ public class Comment implements Serializable {
     private static final long serialVersionUID = -2627592817449954424L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
     private String commentText; //评论内容
     private Timestamp commentTime; //评论时间
