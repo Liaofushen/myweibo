@@ -37,7 +37,7 @@ public class CommentController {
      * @return
      */
     @GetMapping("/{commentId}")
-    public Result<Comment> getByCommentId(@PathVariable Integer commentId) {
+    public Result getByCommentId(@PathVariable Integer commentId) {
         if (!commentService.hasId(commentId)) {
             return ResultUtils.error("commentId不存在");
         } else {
@@ -52,7 +52,7 @@ public class CommentController {
      * @return
      */
     @GetMapping("/news/{newsId}")
-    public Result<List<Comment>> getByNewsId(@PathVariable Integer newsId) {
+    public Result getByNewsId(@PathVariable Integer newsId) {
         return ResultUtils.success(commentService.findByNewsId(newsId));
     }
 
@@ -64,7 +64,7 @@ public class CommentController {
      * @return
      */
     @PostMapping("/create")
-    public Result<Comment> create(@Valid Comment comment, BindingResult bindingResult) {
+    public Result create(@Valid Comment comment, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         }
@@ -80,7 +80,7 @@ public class CommentController {
      * @return
      */
     @PostMapping("/delete/{commentId}")
-    public Result<Object> delete(@PathVariable Integer commentId) {
+    public Result delete(@PathVariable Integer commentId) {
         commentService.delete(commentId);
         return ResultUtils.success();
     }

@@ -20,11 +20,6 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface CommentDao extends JpaRepository<Comment, Integer> {
-    @Query(value = "SELECT " +
-            "comment " +
-            "FROM " +
-            "Comment comment " +
-            "WHERE " +
-            "comment.news.newsId = ?1 ")
+    @Query(value = "SELECT comment FROM Comment comment WHERE comment.news.newsId = ?1 ")
     List<Comment> findByNewsId(Integer newsId);
 }

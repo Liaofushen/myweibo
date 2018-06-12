@@ -48,7 +48,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public Result<User> login(Integer userId, String userPass) {
+    public Result login(Integer userId, String userPass) {
         if (session.getAttribute("user") != null) {
             session.removeAttribute("user");
         }
@@ -71,7 +71,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/logout")
-    public Result<Object> logout() {
+    public Result logout() {
         if (session.getAttribute("user") != null) {
             session.removeAttribute("user");
         }
@@ -96,6 +96,7 @@ public class UserController {
 //            return ResultUtils.success(userService.save(user));
 //        }
 //    }
+
     /**
      * 用户注册或修改资料，有上传头像时
      * @param user
@@ -103,15 +104,14 @@ public class UserController {
      * @return
      */
     @PostMapping(value = {"/register", "/update"})
-    public Result<User> register(@Valid User user, MultipartFile file, BindingResult bindingResult) {
+    public Result register(@Valid User user, MultipartFile file, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         } else if (userService.hasId(user.getUserId())) {
-            return ResultUtils.error("该用户名已经存在");
+            return ResultUtils.error("该用户账号已经存在");
         } else {
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
             user.setUserTime(new Timestamp(System.currentTimeMillis()));
-
             return ResultUtils.success(userService.save(user));
         }
     }
@@ -121,7 +121,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/all")
-    public Result<List<User>> getAll() {
+    public Result getAll() {
         List<User> users = userService.findAll();
         return ResultUtils.success(users);
     }
@@ -132,7 +132,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/{id}")
-    public Result<User> getOne(@PathVariable Integer id) {
+    public Result getOne(@PathVariable Integer id) {
         if (!userService.hasId(id)) {
             return ResultUtils.error("userId不存在");
         }
@@ -147,7 +147,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/session/{key}")
-    public Result<Object> session(@PathVariable String key) {
+    public Result session(@PathVariable String key) {
         Object res = session.getAttribute(key);
         if (res != null)
             return ResultUtils.success(res);

@@ -37,7 +37,7 @@ public class NewsController {
      * @return
      */
     @GetMapping("/all")
-    public Result<List<News>> getAll() {
+    public Result getAll() {
         return ResultUtils.success(newsService.findAll());
     }
 
@@ -47,7 +47,7 @@ public class NewsController {
      * @return
      */
     @GetMapping("/{newsId}")
-    public Result<List<News>> getByNewsId(@PathVariable Integer newsId) {
+    public Result getByNewsId(@PathVariable Integer newsId) {
         if (!newsService.hasId(newsId)) {
             return ResultUtils.error("newsId不存在");
         }
@@ -60,14 +60,14 @@ public class NewsController {
      * @return
      */
     @GetMapping("/user/{userId}")
-    public Result<List<News>> getByUserId(@PathVariable Integer userId) {
+    public Result getByUserId(@PathVariable Integer userId) {
         return ResultUtils.success(newsService.findByUserId(userId));
     }
 
-    @PostMapping("news/like/{id}")
-    public Result<Object> like(Integer id) {
+    @PostMapping("/like/{id}")
+    public Result like(@PathVariable Integer id) {
         News news = newsService.findById(id);
-        news.setNewsId(news.getNewsId() == null ? 1 : news.getNewsId() + 1);
+        news.setNewsLike(news.getNewsLike() == null ? 1 : news.getNewsLike() + 1);
         return ResultUtils.success(newsService.save(news));
     }
 //
@@ -80,8 +80,8 @@ public class NewsController {
 //        return ResultUtils.success(newsService.save(news));
 //    }
 //
-    @PostMapping("/create")
-    public Result<News> create(@Valid News news, MultipartFile file, BindingResult bindingResult) {
+    @PostMapping(value = {"/create", "/update"})
+    public Result create(@Valid News news, MultipartFile file, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         }
@@ -92,7 +92,7 @@ public class NewsController {
     }
 
     @PostMapping("/delete/{id}")
-    public Result<Object> delete(@PathVariable Integer id) {
+    public Result delete(@PathVariable Integer id) {
         newsService.delete(id);
         return ResultUtils.success();
     }
