@@ -2,6 +2,7 @@ package com.night.weibo.controller;
 
 import com.night.weibo.domain.Result;
 import com.night.weibo.domain.User;
+import com.night.weibo.service.NewsService;
 import com.night.weibo.service.UserService;
 import com.night.weibo.utils.PhotoUtils;
 import com.night.weibo.utils.ResultUtils;
@@ -164,5 +165,6 @@ public class UserController {
         System.out.println("upload url:" + upload.getAbsolutePath());
         return upload.getAbsolutePath();
     }
+
 
 }

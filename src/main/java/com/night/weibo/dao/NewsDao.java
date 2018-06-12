@@ -21,15 +21,12 @@ import java.util.Optional;
  * @Version: 1.0
  */
 public interface NewsDao extends JpaRepository<News, Integer> {
-//    @Query(value = "SELECT " +
-//            "newsId, " +
-//            "newsPhoto, " +
-//            "newsText, " +
-//            "newsTime, " +
-//            "userId " +
-//            "FROM " +
-//            "News news " +
-//            "WHERE " +
-//            "userId = ?1 ")
-//    List<News> findByUserId(Integer userId);
+    @Query(value = "SELECT " +
+            "news " +
+            "FROM " +
+            "News news " +
+            "WHERE " +
+            "news.user.userId = ?1 ")
+    List<News> findByUserId(Integer userId);
+
 }
