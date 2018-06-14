@@ -16,6 +16,6 @@ spring:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
-    static-path-pattern: /**
+      static-path-pattern: /static/**
   resources:
-    static-locations: classpath:/WEB-INF/resources/
+  static-locations: classpath:/static/

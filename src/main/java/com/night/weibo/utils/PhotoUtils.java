@@ -1,7 +1,5 @@
 package com.night.weibo.utils;
 
-import org.springframework.http.HttpRequest;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +28,7 @@ public class PhotoUtils {
         File path = null;
         try {
             path = new File(ResourceUtils.getURL("classpath:").getPath());
-            File upload = new File(path.getAbsolutePath(), "/static/user_images/");
+            File upload = new File(path.getAbsolutePath(), "/user_images/");
             if (!upload.exists()) upload.mkdirs();
             return upload.getAbsolutePath();
         } catch (FileNotFoundException e) {
