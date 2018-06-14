@@ -52,7 +52,7 @@ public class ManagerController {
             }
             String managerPass = managerService.findById(manager.getManagerId()).getManagerPass();
             if (!manager.getManagerPass().equals(managerPass)) {
-                return ResultUtils.error("账号不存在");
+                return ResultUtils.error("账号不存在或密码错误");
             } else {
                 session.setAttribute("manager", manager);
                 return ResultUtils.success(manager);
