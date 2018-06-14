@@ -36,15 +36,14 @@ public class ManagerController {
     @Autowired
     private ManagerService managerService;
     @Autowired
-    private UserService userService;
-    @Autowired
-    private NewsService newsService;
-    @Autowired
     private HttpSession session;
 
     @GetMapping(value = "/login")
     @ResponseBody
     public Result login(@Valid Manager manager, BindingResult bindingResult) {
+        if (session.getAttribute("manager") != null) {
+            session.removeAttribute("manager");
+        }
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         } else {
@@ -55,6 +54,7 @@ public class ManagerController {
             if (!manager.getManagerPass().equals(managerPass)) {
                 return ResultUtils.error("账号不存在");
             } else {
+                session.setAttribute("manager", manager);
                 return ResultUtils.success(manager);
             }
         }
@@ -62,13 +62,17 @@ public class ManagerController {
 
     @PostMapping(value = "/register")
     @ResponseBody
-    public Result regiter(@Valid Manager manager, BindingResult bindingResult) {
+    public Result register(@Valid Manager manager, BindingResult bindingResult) {
+        if (session.getAttribute("manager") != null) {
+            session.removeAttribute("manager");
+        }
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         } else {
             if (managerService.hasId(manager.getManagerId())) {
                 return ResultUtils.error("账号已存在");
             } else {
+                session.setAttribute("manager", manager);
                 return ResultUtils.success(managerService.save(manager));
             }
         }
