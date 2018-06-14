@@ -38,7 +38,7 @@ public class ManagerController {
     @Autowired
     private HttpSession session;
 
-    @GetMapping(value = "/login")
+    @PostMapping(value = "/login")
     @ResponseBody
     public Result login(@Valid Manager manager, BindingResult bindingResult) {
         if (session.getAttribute("manager") != null) {
