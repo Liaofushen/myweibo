@@ -126,6 +126,12 @@ public class UserController {
         return ResultUtils.success(users);
     }
 
+    @PostMapping("/delete/{userId}")
+    public Result delete(@PathVariable Integer userId) {
+        userService.deleteById(userId);
+        return ResultUtils.success();
+    }
+
     /**
      * 根据userId，返回一个user
      *
