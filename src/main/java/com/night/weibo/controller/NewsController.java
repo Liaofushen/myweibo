@@ -94,6 +94,21 @@ public class NewsController {
         return ResultUtils.success(newsService.save(news));
     }
 
+    @PostMapping("/createWithoutPhoto")
+    public Result create(
+            @Valid News news,
+            @RequestParam("userId") Integer userId,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
+        }
+        news.setNewsLike(0);
+        news.setUser(userService.findById(userId));
+        news.setNewsTime(new Timestamp(System.currentTimeMillis()));
+        return ResultUtils.success(newsService.save(news));
+    }
+
     @PostMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
         newsService.delete(id);
