@@ -93,7 +93,7 @@ public class UserController {
             return ResultUtils.error("该用户账号已经存在");
         } else {
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
-            if (user.getUserTime() == null) user.setUserTime(new Timestamp(System.currentTimeMillis()));
+            user.setUserTime(new Timestamp(System.currentTimeMillis()));
             return ResultUtils.success(userService.save(user));
         }
     }
@@ -114,6 +114,40 @@ public class UserController {
             return ResultUtils.success(userService.save(user));
         }
     }
+    /**
+     * 用户注册，无上传头像时
+     *
+     * @param user
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("/registerWithoutPhoto")
+    public Result register(@Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
+        } else if (userService.hasId(user.getUserId())) {
+            return ResultUtils.error("该用户账号已经存在");
+        } else {
+            user.setUserTime(new Timestamp(System.currentTimeMillis()));
+            return ResultUtils.success(userService.save(user));
+        }
+    }
+    /**
+     * 修改资料，无上传头像时
+     *
+     * @param user
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("/updateWithoutPhoto")
+    public Result update(@Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
+        } else {
+            user.setUserTime(userService.findById(user.getUserId()).getUserTime());
+            return ResultUtils.success(userService.save(user));
+        }
+    }
 
     /**
      * 返回所有user
@@ -124,6 +158,12 @@ public class UserController {
     public Result getAll() {
         List<User> users = userService.findAll();
         return ResultUtils.success(users);
+    }
+
+    @PostMapping("/delete/{userId}")
+    public Result delete(@PathVariable Integer userId) {
+        userService.deleteById(userId);
+        return ResultUtils.success();
     }
 
     /**

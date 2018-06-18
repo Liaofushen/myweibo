@@ -43,5 +43,8 @@ public class UserService {
         return userDao.save(user);
     }
 
-
+    @Transactional
+    public void deleteById(Integer id) {
+        userDao.deleteById(id);
+    }
 }
