@@ -40,49 +40,5 @@ public class Comment implements Serializable {
     @ManyToOne
     @JoinColumn(name = "news_id")
     private News news;
-
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public Integer getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(Integer commentId) {
-        this.commentId = commentId;
-    }
-
-    public String getCommentText() {
-        return commentText;
-    }
-
-    public void setCommentText(String commentText) {
-        this.commentText = commentText;
-    }
-
-    public Timestamp getCommentTime() {
-        return commentTime;
-    }
-
-    public void setCommentTime(Timestamp commentTime) {
-        this.commentTime = commentTime;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public News getNews() {
-        return news;
-    }
-
-    public void setNews(News news) {
-        this.news = news;
-    }
+    
 }
