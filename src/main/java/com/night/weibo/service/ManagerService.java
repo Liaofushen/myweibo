@@ -4,6 +4,9 @@ import com.night.weibo.dao.ManagerDao;
 import com.night.weibo.domain.Manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @ProjectName: weibo
@@ -22,6 +25,10 @@ public class ManagerService {
     @Autowired
     private ManagerDao managerDao;
 
+    public List<Manager> findAll() {
+        return managerDao.findAll();
+    }
+
     public boolean hasId(Integer id) {
         return managerDao.findById(id).isPresent();
     }
@@ -32,5 +39,10 @@ public class ManagerService {
 
     public Manager save(Manager manager) {
         return managerDao.save(manager);
+    }
+
+    @Transactional
+    public void delete(Integer id) {
+        managerDao.deleteById(id);
     }
 }

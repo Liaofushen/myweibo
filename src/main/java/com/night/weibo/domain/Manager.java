@@ -35,4 +35,32 @@ public class Manager implements Serializable {
 
     @NotBlank(message = "密码不能为空")
     private String managerPass; //密码
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Integer managerId) {
+        this.managerId = managerId;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public String getManagerPass() {
+        return managerPass;
+    }
+
+    public void setManagerPass(String managerPass) {
+        this.managerPass = managerPass;
+    }
 }

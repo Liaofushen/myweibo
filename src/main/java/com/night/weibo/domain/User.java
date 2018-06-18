@@ -52,4 +52,72 @@ public class User implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<News> newss;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserPass() {
+        return userPass;
+    }
+
+    public void setUserPass(String userPass) {
+        this.userPass = userPass;
+    }
+
+    public Boolean getUserSex() {
+        return userSex;
+    }
+
+    public void setUserSex(Boolean userSex) {
+        this.userSex = userSex;
+    }
+
+    public Integer getUserAge() {
+        return userAge;
+    }
+
+    public void setUserAge(Integer userAge) {
+        this.userAge = userAge;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
+    }
+
+    public Timestamp getUserTime() {
+        return userTime;
+    }
+
+    public void setUserTime(Timestamp userTime) {
+        this.userTime = userTime;
+    }
+
+    public List<News> getNewss() {
+        return newss;
+    }
+
+    public void setNewss(List<News> newss) {
+        this.newss = newss;
+    }
 }

@@ -44,4 +44,64 @@ public class News implements Serializable {
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "news")
     private List<Comment> comments;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getNewsId() {
+        return newsId;
+    }
+
+    public void setNewsId(Integer newsId) {
+        this.newsId = newsId;
+    }
+
+    public String getNewsText() {
+        return newsText;
+    }
+
+    public void setNewsText(String newsText) {
+        this.newsText = newsText;
+    }
+
+    public String getNewsPhoto() {
+        return newsPhoto;
+    }
+
+    public void setNewsPhoto(String newsPhoto) {
+        this.newsPhoto = newsPhoto;
+    }
+
+    public Timestamp getNewsTime() {
+        return newsTime;
+    }
+
+    public void setNewsTime(Timestamp newsTime) {
+        this.newsTime = newsTime;
+    }
+
+    public Integer getNewsLike() {
+        return newsLike;
+    }
+
+    public void setNewsLike(Integer newsLike) {
+        this.newsLike = newsLike;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }

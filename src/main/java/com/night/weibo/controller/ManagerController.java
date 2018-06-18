@@ -7,12 +7,11 @@ import com.night.weibo.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @ProjectName: weibo
@@ -73,5 +72,15 @@ public class ManagerController {
                 return ResultUtils.success(managerService.save(manager));
             }
         }
+    }
+    @GetMapping("/all")
+    public Result getAll() {
+        List<Manager> managers = managerService.findAll();
+        return ResultUtils.success(managers);
+    }
+    @PostMapping("/delete/{id}")
+    public Result delete(@PathVariable Integer id) {
+        managerService.delete(id);
+        return ResultUtils.success();
     }
 }
