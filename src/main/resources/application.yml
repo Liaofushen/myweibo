@@ -10,3 +10,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+      static-path-pattern: /static/**
+  resources:
+  static-locations: classpath:/static/
