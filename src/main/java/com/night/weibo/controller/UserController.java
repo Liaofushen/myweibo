@@ -109,7 +109,6 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         } else {
-            user.setUserTime(userService.findById(user.getUserId()).getUserTime());
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
             return ResultUtils.success(userService.save(user));
         }
@@ -128,7 +127,6 @@ public class UserController {
         } else if (userService.hasId(user.getUserId())) {
             return ResultUtils.error("该用户账号已经存在");
         } else {
-            user.setUserTime(new Timestamp(System.currentTimeMillis()));
             return ResultUtils.success(userService.save(user));
         }
     }
