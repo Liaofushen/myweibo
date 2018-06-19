@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,9 +53,9 @@ public class UserController {
             session.removeAttribute("user");
         }
 
-        if (userId == null || StringUtils.isBlank(userPass)) {
+        /*if (userId == null || StringUtils.isBlank(userPass)) {
             return ResultUtils.error("用户名或密码为空");
-        } else {
+        } else {*/
             User user = userService.findById(userId);
             if (userPass.equals(user.getUserPass())) {
                 session.setAttribute("user", user);
@@ -62,7 +63,7 @@ public class UserController {
             } else {
                 return ResultUtils.error("用户名或密码错误");
             }
-        }
+        //}
     }
 
     /**
@@ -93,7 +94,7 @@ public class UserController {
             return ResultUtils.error("该用户账号已经存在");
         } else {
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
-            user.setUserTime(new Timestamp(System.currentTimeMillis()));
+            user.setUserTime(new Date(System.currentTimeMillis()));
             return ResultUtils.success(userService.save(user));
         }
     }

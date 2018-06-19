@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @ProjectName: weibo
@@ -90,7 +91,7 @@ public class NewsController {
         news.setNewsLike(0);
         news.setUser(userService.findById(userId));
         news.setNewsPhoto(PhotoUtils.save(file, userId));
-        news.setNewsTime(new Timestamp(System.currentTimeMillis()));
+        news.setNewsTime(new Date(System.currentTimeMillis()));
         return ResultUtils.success(newsService.save(news));
     }
 
@@ -105,7 +106,7 @@ public class NewsController {
         }
         news.setNewsLike(0);
         news.setUser(userService.findById(userId));
-        news.setNewsTime(new Timestamp(System.currentTimeMillis()));
+        news.setNewsTime(new Date(System.currentTimeMillis()));
         return ResultUtils.success(newsService.save(news));
     }
 

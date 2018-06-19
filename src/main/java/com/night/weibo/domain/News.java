@@ -7,7 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,8 +25,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"comments"})
-@JsonIgnoreProperties(value = {"comments"})
+//@ToString(exclude = {"comments"})
+//@JsonIgnoreProperties(value = {"comments"})
 public class News implements Serializable {
     private static final long serialVersionUID = 8763354922350989214L;
 
@@ -35,9 +35,9 @@ public class News implements Serializable {
     private Integer newsId;
     private String newsText; //微博内容
     private String newsPhoto; //微博图片路径
-    private Timestamp newsTime; //微博发表时间
-    private Integer newsLike;
-
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date newsTime; //微博发表时间
+    private Integer newsLike = 0;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

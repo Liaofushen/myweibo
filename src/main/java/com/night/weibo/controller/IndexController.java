@@ -15,4 +15,12 @@ public class IndexController {
     public String back(){
         return "/back/index";
     }
+    @GetMapping("/signin")
+    public String signin() {
+        return "/signin";
+    }
+    @GetMapping("/main")
+    public String main() {
+        return "/main";
+    }
 }

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class HttpAspect {
 
+    //test
     private final static Logger logger = LoggerFactory.getLogger(HttpAspect.class);
     @Pointcut("execution(public * com.night.weibo.controller.*.*(..))")
     public void log() {
