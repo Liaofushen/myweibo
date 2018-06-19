@@ -40,5 +40,5 @@ public class Comment implements Serializable {
     @ManyToOne
     @JoinColumn(name = "news_id")
     private News news;
-    
+
 }

@@ -73,11 +73,6 @@ public class ManagerController {
             }
         }
     }
-    @GetMapping("/all")
-    public Result getAll() {
-        List<Manager> managers = managerService.findAll();
-        return ResultUtils.success(managers);
-    }
     @PostMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
         managerService.delete(id);
