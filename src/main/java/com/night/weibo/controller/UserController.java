@@ -53,9 +53,9 @@ public class UserController {
             session.removeAttribute("user");
         }
 
-        if (userId == null || StringUtils.isBlank(userPass)) {
+        /*if (userId == null || StringUtils.isBlank(userPass)) {
             return ResultUtils.error("用户名或密码为空");
-        } else {
+        } else {*/
             User user = userService.findById(userId);
             if (userPass.equals(user.getUserPass())) {
                 session.setAttribute("user", user);
@@ -63,7 +63,7 @@ public class UserController {
             } else {
                 return ResultUtils.error("用户名或密码错误");
             }
-        }
+        //}
     }
 
     /**
