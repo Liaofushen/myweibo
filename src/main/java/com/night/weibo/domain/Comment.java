@@ -1,5 +1,6 @@
 package com.night.weibo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @ProjectName: weibo
@@ -23,7 +25,8 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"user"})
+@JsonIgnoreProperties(value = {"news"})
 public class Comment implements Serializable {
     private static final long serialVersionUID = -2627592817449954424L;
 
@@ -31,7 +34,8 @@ public class Comment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
     private String commentText; //评论内容
-    private Timestamp commentTime; //评论时间
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date commentTime; //评论时间
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -40,5 +44,5 @@ public class Comment implements Serializable {
     @ManyToOne
     @JoinColumn(name = "news_id")
     private News news;
-    
+
 }

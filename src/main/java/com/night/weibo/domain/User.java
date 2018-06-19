@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,7 +46,8 @@ public class User implements Serializable {
 
     private String userPhoto; //头像路径
 
-    private Timestamp userTime; //加入微博的时间
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date userTime; //加入微博的时间
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<News> newss;

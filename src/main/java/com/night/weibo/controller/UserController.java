@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -93,7 +94,7 @@ public class UserController {
             return ResultUtils.error("该用户账号已经存在");
         } else {
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
-            user.setUserTime(new Timestamp(System.currentTimeMillis()));
+            user.setUserTime(new Date(System.currentTimeMillis()));
             return ResultUtils.success(userService.save(user));
         }
     }
