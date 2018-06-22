@@ -9,7 +9,6 @@
     <link rel="shortcunt icon" type="/image/x-icon" href="/static/images/favicon.ico">
     <link rel="stylesheet" href="/static/css/common.css">
     <link type="text/css" rel="stylesheet" href="/static/css/index.css">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
 </head>
 <body>
 <div class="header">
@@ -94,7 +93,7 @@
         <div>
             <textarea id="publishNewsText" name="newstext"></textarea>
             <input id="publishPhoto" type="file" class="file" name="photo" accept="image/jpeg"/>
-            <button onclick="publish()" class="post-btn">提 交</button>
+            <button onclick="onPublish();" class="post-btn">提 交</button>
         </div>
     </div>
 </div>
@@ -132,8 +131,7 @@
                         "<ul>" +
                         "<li>" +
                         "<a onclick=\"comment('" + result.data[i].newsId + "')\" class=\"arrow-warp\">" +
-                        "<span>评论</span>" +
-                        "<span>newsComment</span>" +
+                        "<span>评论</span><span id='commentId" + result.data[i].newsId + "Number'>" + result.data[i].comments.length +"</span>" +
                         "<span class=\"arrow\"></span>" +
                         "</a>" +
                         "</li>" +
@@ -149,28 +147,30 @@
                     var itemRepeat = $("<div class='item-repeat'  id=\"commentID" + result.data[i].newsId + "\" style=\"display: none\"></div>");
                     var selfRepeat = $("<div class=\"self-repeat\">" +
                         "<div class=\"repeat-inputtxt\" id=\"cnt" + result.data[i].newsId + "\" contenteditable=\"true\"></div>" +
-                        "<input type=hidden name=\"commentText\" id=\"textt" + result.data[i].newsId + "\">" +
-                        "<input type=hidden name=\"newsId\" value=\"" + result.data[i].newsId + "\">" +
+                        //"<input type='text' name=\"commentText\" id=\"textt" + result.data[i].newsId + "\">" +
+                        //"<input type='text' name=\"newsId\" value=\"" + result.data[i].newsId + "\">" +
                         "<button type=\"button\" class=\"repeat-inputtxt-btn\" onclick=\"doComment(" + result.data[i].newsId + ")\">" +
                         "评 论" +
                         "</button>" +
                         "</div>");
-                    var repeatList = $("<div class=\"repeat-list\">" +
-                        "<div class=\"repeat-icon\">" +
-                        "<a href=\"javascript:void(0)\"><img src=\"./images/user3.png\" alt=\"葵花妹\" width=\"30px\"></a>" +
-                        "</div></div>");
+                    var repeatList = $("<div id='repeatID" + result.data[i].newsId + "' class=\"repeat-list\"></div>");
                     if (result.data[i].comments != null) {
                         for (var j = 0; j < result.data[i].comments.length; j++) {
+                            var repeatIcon = "<div class=\"repeat-icon\">" +
+                                "<a href=\"javascript:void(0)\"><img src=\"./images/user3.png\" alt=\"葵花妹\" width=\"30px\"></a>" +
+                                "</div>";
                             var repeatContent = $("<div class=\"repeat-content\"></div>");
                             var repeatContentText = $("<div class=\"repeat-content-text\">" +
-                                "<a href=\"javascript:void(0);\">" + result.data[i].comments[j].user.userName + "</a>" +
+                                "<a href=\"javascript:void(0);\">" + result.data[i].comments[j].user.userName + "</a> : " +
                                 result.data[i].comments[j].commentText +
                                 "</div>");
                             var repeatContentFunc = $("<div class=\"repeat-content-func\">" +
                                 "<div class=\"repeat-time\">" + result.data[i].comments[j].commentTime + "</div>" +
                                 "</div>");
+                            repeatContent.append(repeatIcon);
                             repeatContent.append(repeatContentText);
                             repeatContent.append(repeatContentFunc);
+                            repeatContent.append("<br />");
                             repeatList.append(repeatContent);
                         }
                     }
@@ -184,15 +184,14 @@
             }
         });
     });
-</script>
-<script>
     //发布
-    function publish() {
+    var onPublish = function () {
         var userId = ${sessionScope.user.userId};
         var publishNewsText = $("#publishNewsText").val();
         $.post("/news/createWithoutPhoto", {userId: userId, newsText: publishNewsText}, function (result) {
             if (result.status) {
                 console.log("suc");
+                window.location.reload();
             }
             else {
                 console.log(result.msg);
@@ -220,10 +219,28 @@
     //执行评论
     function doComment(newsId) {
         var userId = ${sessionScope.user.userId};
-        var text = $("#textt" + newsId).val();
-        $.post("/comment/create", {commentText: text, newsId: newsId, userId: userId}, function (result) {
+        var text = $("#cnt" + newsId).html();
+       $.post("/comment/create", {commentText: text, newsId: newsId, userId: userId}, function (result) {
             if (result.status) {
                 console.log("suc");
+                var repeatList = $("#repeatID" + newsId );
+                var repeatIcon = "<div class=\"repeat-icon\">" +
+                    "<a href=\"javascript:void(0)\"><img src=\"./images/user3.png\" alt=\"葵花妹\" width=\"30px\"></a>" +
+                    "</div>";
+                var repeatContent = $("<div class=\"repeat-content\"></div>");
+                var repeatContentText = $("<div class=\"repeat-content-text\">" +
+                    "<a href=\"javascript:void(0);\">" + result.data.user.userName + "</a> : " +
+                    result.data.commentText +
+                    "</div>");
+                var repeatContentFunc = $("<div class=\"repeat-content-func\">" +
+                    "<div class=\"repeat-time\">" + result.data.commentTime + "</div>" +
+                    "</div>");
+                repeatContent.append(repeatIcon);
+                repeatContent.append(repeatContentText);
+                repeatContent.append(repeatContentFunc);
+                repeatContent.append("<br />");
+                repeatList.append(repeatContent);
+                $("#commentId" + newsId + "Number").html(Number($("#commentId" + newsId + "Number").html()) + 1);
             }
             else {
                 console.log(result.msg);
