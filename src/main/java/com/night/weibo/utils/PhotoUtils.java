@@ -38,6 +38,7 @@ public class PhotoUtils {
     }
 
     public static String save(MultipartFile file, Integer id) {
+        if (file == null) return "";
         String path = urlPre();
         String filename = System.currentTimeMillis() + "_" + random.nextInt(100000) + ".jpg";
 

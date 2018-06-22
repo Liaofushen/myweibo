@@ -92,7 +92,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public Result register(@Valid User user, @RequestParam("photo") MultipartFile file, BindingResult bindingResult) {
+    public Result register(@Valid User user, @RequestParam(value = "photo", required = false) MultipartFile file, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         } else if (userService.hasId(user.getUserId())) {

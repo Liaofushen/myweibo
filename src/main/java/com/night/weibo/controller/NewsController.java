@@ -86,7 +86,7 @@ public class NewsController {
     @PostMapping("/create")
     public Result create(
             @Valid News news,
-            @RequestParam("photo") MultipartFile file,
+            @RequestParam(value = "photo", required = false) MultipartFile file,
             @RequestParam("userId") Integer userId,
             BindingResult bindingResult) {
 
