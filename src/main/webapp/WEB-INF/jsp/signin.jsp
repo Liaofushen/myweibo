@@ -133,7 +133,7 @@
                 userAge: userAge, userName: userName
             }, function (result) {
                 if (result.status) {
-                    window.location.href = "/";
+                    window.location.href = "/main";
                 }
                 else {
                     $("#signup-hint").html(result.msg);
