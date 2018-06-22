@@ -71,6 +71,11 @@ public class NewsController {
         return ResultUtils.success(newsService.findByUserId(userId));
     }
 
+    /**
+     * 点赞数
+     * @param id
+     * @return
+     */
     @PostMapping("/like/{id}")
     public Result like(@PathVariable Integer id) {
         News news = newsService.findById(id);

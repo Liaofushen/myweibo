@@ -45,7 +45,6 @@ public class User implements Serializable {
     private Integer userAge; //年龄
 
     private String userPhoto; //头像路径
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date userTime; //加入微博的时间
 

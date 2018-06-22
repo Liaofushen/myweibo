@@ -2,6 +2,7 @@ package com.night.weibo.controller;
 
 import com.night.weibo.domain.Result;
 import com.night.weibo.domain.User;
+import com.night.weibo.service.FansService;
 import com.night.weibo.service.UserService;
 import com.night.weibo.utils.PhotoUtils;
 import com.night.weibo.utils.ResultUtils;
@@ -37,6 +38,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private FansService fansService;
     @Autowired
     private HttpSession session;
 
@@ -179,6 +182,38 @@ public class UserController {
         User user = userService.findById(id);
         session.setAttribute("user", user);
         return ResultUtils.success(user);
+    }
+
+    /**
+     * 获得粉丝列表
+     * @param userId
+     * @return
+     */
+    @GetMapping("/fans/{userId}")
+    public Result getFans(@PathVariable Integer userId) {
+        return ResultUtils.success(fansService.getFansByUserId(userId));
+    }
+
+
+    /**
+     * 获得关注人列表
+     * @param userId
+     * @return
+     */
+    @GetMapping("/attention/{userId}")
+    public Result getAttention(@PathVariable Integer userId) {
+        return ResultUtils.success(fansService.getAttentionByUserId(userId));
+    }
+
+    /**
+     * userFirst 关注 userSecond
+     * @param userFirst
+     * @param userSecond
+     * @return
+     */
+    @PostMapping("/fans") //url: user/fans?userFirst=1&userSecond=2
+    public Result doFans(@RequestParam Integer userFirst, @RequestParam Integer userSecond) {
+        return ResultUtils.success(fansService.save(userFirst, userSecond));
     }
 
     /**
