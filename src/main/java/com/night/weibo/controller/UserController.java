@@ -1,5 +1,6 @@
 package com.night.weibo.controller;
 
+import com.night.weibo.domain.Fans;
 import com.night.weibo.domain.Result;
 import com.night.weibo.domain.User;
 import com.night.weibo.service.FansService;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -191,7 +193,13 @@ public class UserController {
      */
     @GetMapping("/fans/{userId}")
     public Result getFans(@PathVariable Integer userId) {
-        return ResultUtils.success(fansService.getFansByUserId(userId));
+        List<Fans> fansList = fansService.getFansByUserId(userId);
+        List<User> userList = new ArrayList<>();
+        for (Fans f : fansList) {
+            User u = userService.findById(f.getUserFirst());
+            userList.add(u);
+        }
+        return ResultUtils.success(userList);
     }
 
 
@@ -202,7 +210,13 @@ public class UserController {
      */
     @GetMapping("/attention/{userId}")
     public Result getAttention(@PathVariable Integer userId) {
-        return ResultUtils.success(fansService.getAttentionByUserId(userId));
+        List<Fans> fansList = fansService.getAttentionByUserId(userId);
+        List<User> userList = new ArrayList<>();
+        for (Fans f : fansList) {
+            User u = userService.findById(f.getUserSecond());
+            userList.add(u);
+        }
+        return ResultUtils.success(userList);
     }
 
     /**
