@@ -9,6 +9,49 @@
     <link rel="shortcunt icon" type="/image/x-icon" href="/static/images/favicon.ico">
     <link rel="stylesheet" href="/static/css/common.css">
     <link type="text/css" rel="stylesheet" href="/static/css/index.css">
+    <style>
+        .main-nav {
+            list-style-type: none;
+            margin: 0 0 20px 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333333;
+        }
+        .nav-item {
+            float: left;
+        }
+        .nav-item a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 25px 14px 25px;
+            text-decoration: none;
+        }
+        .nav-item a:hover {
+            background-color: #111;
+        }
+        .user-box-item {
+            background-color: #0f0f0f;
+            border-radius: 5px;
+            width: 100%;
+            height: 60px;
+            margin-top: 20px;
+            position: relative;
+        }
+        .user-box-item img {
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+        }
+        .user-box-item div {
+            margin-left: 70px;
+            width: 200px;
+            height: 60px;
+            line-height: 60px;
+            font-size: 30px;
+        }
+    </style>
 </head>
 <body>
 <div class="header">
@@ -50,29 +93,35 @@
     </div>
 </div>
 <div class="main">
-    <div class="content">
-
+    <div class="main-nav">
+        <div onclick="showDivAndHideOther(0)" class="nav-item"><a>主页</a></div>
+        <div onclick="showDivAndHideOther(1)" class="nav-item"><a>粉丝</a></div>
+        <div onclick="showDivAndHideOther(2)" class="nav-item"><a>关注</a></div>
+        <div onclick="showDivAndHideOther(3)" class="nav-item"><a>说说</a></div>
     </div>
+    <div style="display: none;" id="mainDIV" class="content"></div>
+    <div style="display: none;" id="followedDIV"></div>
+    <div style="display: none;" id="followingDIV"></div>
+    <div style="display: none;width: 624px;height: 1000px;" id="publishDIV"></div>
 </div>
 <div class="p-info">
     <div class="p-icon">
         <img src="/photo/${sessionScope.user.userPhoto}" alt="picon" style="width: 100px;height: 100px">
     </div>
     <div class="p-name"><a href="/homepage/myOwn?username=${sessionScope.user.userName}">${sessionScope.user.userName}</a></div>
-    <div class="p-intro">999</div>
     <div class="p-profile">
         <ul>
             <li><a href="/relation/getFollowers?userName=${sessionScope.user.userName}">
                 <span>关注</span>
-                <span class="p-following">999</span>
+                <span id="numberOfFollowing" class="p-following">--</span>
             </a></li>
             <li><a href="/relation/getFans?userName=${sessionScope.user.userName}">
                 <span>粉丝</span>
-                <span class="p-followed">999</span>
+                <span id="numberOfFollowed" class="p-followed">--</span>
             </a></li>
             <li><a href="/homepage/myOwn?username=${sessionScope.user.userName}">
                 <span>说说</span>
-                <span class="p-publish">999</span>
+                <span id="numberOfPublish" class="p-publish">--</span>
             </a></li>
         </ul>
     </div>
@@ -85,11 +134,6 @@
     <div class="post-title">说点什么</div>
     <div class="post-close">关闭</div>
     <div class="post-input">
-        <!--<form action="/news/publish" enctype="multipart/form-data" method="post">
-            <textarea id="publishNewsText" name="newstext"></textarea>
-            <input id="publishPhoto" type="file" class="file" name="photo" accept="image/jpeg"/>
-            <input type="submit" class="post-btn" name="button"/>
-        </form>-->
         <div>
             <textarea id="publishNewsText" name="newstext"></textarea>
             <input id="publishPhoto" type="file" class="file" name="photo" accept="image/jpeg"/>
@@ -102,11 +146,55 @@
 <script type="text/javascript" src="/static/js/index.js"></script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
+    var fanArray;
+    var attentionArray;
+    var newsArray;
+    var divArray = [$("#mainDIV"), $("#followedDIV"), $("#followingDIV"), $("#publishDIV")];
+    var showDivAndHideOther = function(index) {
+        divArray.forEach(function (value, index2, array) {
+            if (index2 !== index) {
+                value.hide();
+                $(".nav-item").eq(index2).css("background-color", "#333333");
+            }
+            else {
+                value.show();
+                $(".nav-item").eq(index2).css("background-color", "#555555");
+            }
+        });
+    };
     $(document).ready(function () {
+        $(".nav-item").eq(0).click();
+        var userId = ${sessionScope.user.userId};
+        $.get("/user/fans/" + userId, function (result) {
+            if (result.status) {
+                fanArray = result.data;
+                $("#numberOfFollowed").html(result.data.length);
+                for (var i = 0; i < fanArray.length; i++) {
+                    var followedDIV = $("#followedDIV");
+                    followedDIV.append("<img src='./images/user3.png'/><div>" + fanArray[i].userName + "</div>");
+                }
+            }
+        });
+        $.get("/user/attention/" + userId, function (result) {
+            if (result.status) {
+                attentionArray = result.data;
+                $("#numberOfFollowing").html(result.data.length);
+                for (var i = 0; i < attentionArray.length; i++) {
+                    var followedDIV = $("#followingDIV");
+                    followedDIV.append("<img src='./images/user3.png'/><div>" + attentionArray[i].userName + "</div>");
+                }
+            }
+        });
+        $.get("/news/user/" + userId, function (result) {
+            if (result.status) {
+                newsArray = result.data;
+                $("#numberOfPublish").html(result.data.length);
+                getAndShowNews(result, $("#publishDIV"));
+            }
+        });
         $.get("/news/all", function (result) {
             if (result.status) {
                 for (var i = 0; i < result.data.length; i++) {
-                    console.log(i);
                     var item = $("<div class='item'></div>");
                     var itemMain = $("<div class='item-main'></div>");
                     var uInfo = $(
@@ -115,7 +203,7 @@
                         "</div>" +
                         "<div class=\"name-pub\">" +
                         "<div class=\"u-name\">" + "<a href=\"\">" + result.data[i].user.userName + "</a>" + "</div>" +
-                        "<div class=\"u-pub\">" + result.data[i].user.userTime + "</div>" +
+                        "<div class=\"u-pub\">" + result.data[i].newsTime + "</div>" +
                         "</div>" +
                         "</div>"
                     );
@@ -184,6 +272,83 @@
             }
         });
     });
+    var getAndShowNews = function (result, content) {
+        for (var i = 0; i < result.data.length; i++) {
+            var item = $("<div class='item'></div>");
+            var itemMain = $("<div class='item-main'></div>");
+            var uInfo = $(
+                "<div class=\"u-info\"><div class=\"u-icon\">" +
+                "<img src=\"/photo/" + result.data[i].user.photo + "\" alt=\"IVEN-木罐\" style=\"height:60px;width: 60px;\"/>" +
+                "</div>" +
+                "<div class=\"name-pub\">" +
+                "<div class=\"u-name\">" + "<a href=\"\">" + result.data[i].user.userName + "</a>" + "</div>" +
+                "<div class=\"u-pub\">" + result.data[i].newsTime + "</div>" +
+                "</div>" +
+                "</div>"
+            );
+            var itemContent = $("<div class=\"itemcontent\"></div>");
+            if (result.data[i].newsPhoto != null) {
+                itemContent.append("<div class=\"thumbnail\">" +
+                    "<img src=\"/photo/" + result.data[i].newsPhoto + "\" alt=\"img1\" style=\"width:100px;height: 100px;\"/>" +
+                    "</div>");
+            }
+            itemContent.append("<div class=\"full-text\">" +
+                "<p>" + result.data[i].newsText + "</p></div>");
+            var uList = $("<div class=\"u-list\">" +
+                "<ul>" +
+                "<li>" +
+                "<a onclick=\"comment('" + result.data[i].newsId + "')\" class=\"arrow-warp\">" +
+                "<span>评论</span><span id='commentId" + result.data[i].newsId + "Number'>" + result.data[i].comments.length +"</span>" +
+                "<span class=\"arrow\"></span>" +
+                "</a>" +
+                "</li>" +
+                "<li><a href=\"javascript:void(0);\" onclick='like(" + result.data[i].newsId + "," + result.data[i].newsLike +
+                ")'><span>喜欢</span><span id='newsId" + result.data[i].newsId + "Like'>" + result.data[i].newsLike +
+                "</span></a></li>" +
+                "</ul>" +
+                "</div>");
+            itemMain.append(uInfo);
+            itemMain.append(itemContent);
+            itemMain.append(uList);
+
+            var itemRepeat = $("<div class='item-repeat'  id=\"commentID" + result.data[i].newsId + "\" style=\"display: none\"></div>");
+            var selfRepeat = $("<div class=\"self-repeat\">" +
+                "<div class=\"repeat-inputtxt\" id=\"cnt" + result.data[i].newsId + "\" contenteditable=\"true\"></div>" +
+                //"<input type='text' name=\"commentText\" id=\"textt" + result.data[i].newsId + "\">" +
+                //"<input type='text' name=\"newsId\" value=\"" + result.data[i].newsId + "\">" +
+                "<button type=\"button\" class=\"repeat-inputtxt-btn\" onclick=\"doComment(" + result.data[i].newsId + ")\">" +
+                "评 论" +
+                "</button>" +
+                "</div>");
+            var repeatList = $("<div id='repeatID" + result.data[i].newsId + "' class=\"repeat-list\"></div>");
+            if (result.data[i].comments != null) {
+                for (var j = 0; j < result.data[i].comments.length; j++) {
+                    var repeatIcon = "<div class=\"repeat-icon\">" +
+                        "<a href=\"javascript:void(0)\"><img src=\"./images/user3.png\" alt=\"葵花妹\" width=\"30px\"></a>" +
+                        "</div>";
+                    var repeatContent = $("<div class=\"repeat-content\"></div>");
+                    var repeatContentText = $("<div class=\"repeat-content-text\">" +
+                        "<a href=\"javascript:void(0);\">" + result.data[i].comments[j].user.userName + "</a> : " +
+                        result.data[i].comments[j].commentText +
+                        "</div>");
+                    var repeatContentFunc = $("<div class=\"repeat-content-func\">" +
+                        "<div class=\"repeat-time\">" + result.data[i].comments[j].commentTime + "</div>" +
+                        "</div>");
+                    repeatContent.append(repeatIcon);
+                    repeatContent.append(repeatContentText);
+                    repeatContent.append(repeatContentFunc);
+                    repeatContent.append("<br />");
+                    repeatList.append(repeatContent);
+                }
+            }
+            itemRepeat.append(selfRepeat);
+            itemRepeat.append(repeatList);
+
+            item.append(itemMain);
+            item.append(itemRepeat);
+            content.append(item);
+        }
+    };
     //发布
     var onPublish = function () {
         var userId = ${sessionScope.user.userId};
