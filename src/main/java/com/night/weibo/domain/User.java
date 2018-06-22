@@ -27,8 +27,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"newss"})
-@JsonIgnoreProperties(value = {"newss"})
+@ToString(exclude = {"newss, userPass"})
+@JsonIgnoreProperties(value = {"newss", "userPass"})
 public class User implements Serializable {
     private static final long serialVersionUID = -1717570815700593939L;
 
