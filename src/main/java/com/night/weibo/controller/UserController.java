@@ -7,7 +7,6 @@ import com.night.weibo.service.FansService;
 import com.night.weibo.service.UserService;
 import com.night.weibo.utils.PhotoUtils;
 import com.night.weibo.utils.ResultUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,13 +59,13 @@ public class UserController {
         /*if (userId == null || StringUtils.isBlank(userPass)) {
             return ResultUtils.error("用户名或密码为空");
         } else {*/
-            User user = userService.findById(userId);
-            if (userPass.equals(user.getUserPass())) {
-                session.setAttribute("user", user);
-                return ResultUtils.success(user);
-            } else {
-                return ResultUtils.error("用户名或密码错误");
-            }
+        User user = userService.findById(userId);
+        if (userPass.equals(user.getUserPass())) {
+            session.setAttribute("user", user);
+            return ResultUtils.success(user);
+        } else {
+            return ResultUtils.error("用户名或密码错误");
+        }
         //}
     }
 
@@ -103,6 +101,7 @@ public class UserController {
             return ResultUtils.success(userService.save(user));
         }
     }
+
     /**
      * 修改资料，有上传头像时
      *
@@ -116,11 +115,12 @@ public class UserController {
             return ResultUtils.error("userId 不空为空");
         } else {
             User user1 = userService.findById(user.getUserId());
-            if (oldUserPass != null && !oldUserPass .equals( user1.getUserPass())) {
+            if (oldUserPass != null && !oldUserPass.equals(user1.getUserPass())) {
                 return ResultUtils.error("旧密码错误");
             }
             if (user.getUserName() == null) user.setUserName(user1.getUserName());
             if (user.getUserPass() == null) user.setUserPass(user1.getUserPass());
+            
             if (user.getUserTime() == null) user.setUserTime(user1.getUserTime());
             if (user.getUserPhoto() == null) user.setUserPhoto(user1.getUserPhoto());
             if (user.getUserSex() == null) user.setUserSex(user1.getUserSex());
@@ -166,6 +166,7 @@ public class UserController {
 
     /**
      * 获得粉丝列表
+     *
      * @param userId
      * @return
      */
@@ -183,6 +184,7 @@ public class UserController {
 
     /**
      * 获得关注人列表
+     *
      * @param userId
      * @return
      */
@@ -199,6 +201,7 @@ public class UserController {
 
     /**
      * userFirst 关注 userSecond
+     *
      * @param userFirst
      * @param userSecond
      * @return
