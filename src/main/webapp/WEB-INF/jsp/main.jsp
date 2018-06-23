@@ -11,14 +11,22 @@
     <link type="text/css" rel="stylesheet" href="/static/css/index.css">
     <style>
         .main-nav {
+            width: 624px;
             list-style-type: none;
             margin: 0 0 20px 0;
             padding: 0;
             overflow: hidden;
             background-color: #333333;
+            border-radius: 5px;
         }
         .nav-item {
             float: left;
+        }
+        .setting-Nav {
+            float: right;
+        }
+        a {
+            cursor: pointer;
         }
         .nav-item a {
             display: block;
@@ -31,12 +39,14 @@
             background-color: #111;
         }
         .user-box-item {
+            cursor: pointer;
+            width: 624px;
             background-color: #0f0f0f;
             border-radius: 5px;
-            width: 100%;
-            height: 60px;
+            height: 70px;
             margin-top: 20px;
             position: relative;
+            box-shadow: 0px 3px 6px rgba(35, 35, 36, 0.75);
         }
         .user-box-item img {
             float: left;
@@ -45,10 +55,10 @@
             margin: 10px;
         }
         .user-box-item div {
-            margin-left: 70px;
+            margin-left: 80px;
             width: 200px;
-            height: 60px;
-            line-height: 60px;
+            height: 70px;
+            line-height: 70px;
             font-size: 30px;
         }
     </style>
@@ -64,25 +74,25 @@
         </div>
         <div class="nav">
             <ul>
-                <li>
+                <!--<li>
                     <form action="/search" method="post">
                         <input type="text" name="search"/>
                         <input type="submit" value="搜索" style="height: 25px"/>
                     </form>
-                </li>
+                </li>-->
                 <li>
-                    <a href="#">私信</a>
+                    <a>私信</a>
                     <div class="num">6</div>
                 </li>
                 <li>
-                    <a href="/user/getNotice">通知</a>
+                    <a>通知</a>
                     <div class="num">14</div>
                 </li>
                 <li class="account">
-                    <a href="/user/index">${sessionScope.user.userName}</a>
+                    <h3><a href="/main">${sessionScope.user.userName}</a></h3>
                     <div class="account-panel">
                         <ul>
-                            <li class="panel1"><a href="/user/setting">设置</a></li>
+                            <li class="panel1" onclick="showDivAndHideOther(4)"><a>设置</a></li>
                             <li class="panel2"><a href="/user/logout">退出</a></li>
                             <li class="panel2"><a href="/user/changePassPage">更改密码</a></li>
                         </ul>
@@ -98,11 +108,16 @@
         <div onclick="showDivAndHideOther(1)" class="nav-item"><a>粉丝</a></div>
         <div onclick="showDivAndHideOther(2)" class="nav-item"><a>关注</a></div>
         <div onclick="showDivAndHideOther(3)" class="nav-item"><a>说说</a></div>
+        <div class="nav-item setting-Nav" onclick="showDivAndHideOther(4)"><a>设置</a></div>
     </div>
     <div style="display: none;" id="mainDIV" class="content"></div>
     <div style="display: none;" id="followedDIV"></div>
     <div style="display: none;" id="followingDIV"></div>
     <div style="display: none;width: 624px;height: 1000px;" id="publishDIV"></div>
+    <div style="display: none;" id="settingDIV">
+        <br />
+        <h2 style="color: #333;">设置</h2>
+    </div>
 </div>
 <div class="p-info">
     <div class="p-icon">
@@ -111,15 +126,15 @@
     <div class="p-name"><a href="/homepage/myOwn?username=${sessionScope.user.userName}">${sessionScope.user.userName}</a></div>
     <div class="p-profile">
         <ul>
-            <li><a href="/relation/getFollowers?userName=${sessionScope.user.userName}">
-                <span>关注</span>
-                <span id="numberOfFollowing" class="p-following">--</span>
-            </a></li>
-            <li><a href="/relation/getFans?userName=${sessionScope.user.userName}">
+            <li><a onclick="showDivAndHideOther(1)">
                 <span>粉丝</span>
                 <span id="numberOfFollowed" class="p-followed">--</span>
             </a></li>
-            <li><a href="/homepage/myOwn?username=${sessionScope.user.userName}">
+            <li><a onclick="showDivAndHideOther(2)">
+                <span>关注</span>
+                <span id="numberOfFollowing" class="p-following">--</span>
+            </a></li>
+            <li><a onclick="showDivAndHideOther(3)">
                 <span>说说</span>
                 <span id="numberOfPublish" class="p-publish">--</span>
             </a></li>
@@ -149,7 +164,7 @@
     var fanArray;
     var attentionArray;
     var newsArray;
-    var divArray = [$("#mainDIV"), $("#followedDIV"), $("#followingDIV"), $("#publishDIV")];
+    var divArray = [$("#mainDIV"), $("#followedDIV"), $("#followingDIV"), $("#publishDIV"), $("#settingDIV")];
     var showDivAndHideOther = function(index) {
         divArray.forEach(function (value, index2, array) {
             if (index2 !== index) {
@@ -169,9 +184,12 @@
             if (result.status) {
                 fanArray = result.data;
                 $("#numberOfFollowed").html(result.data.length);
+                var followedDIV = $("#followedDIV");
                 for (var i = 0; i < fanArray.length; i++) {
-                    var followedDIV = $("#followedDIV");
-                    followedDIV.append("<img src='./images/user3.png'/><div>" + fanArray[i].userName + "</div>");
+                    followedDIV.append("<div class='user-box-item'><img src='./images/user3.png'/><div>" + fanArray[i].userName + "</div></div>");
+                }
+                if (fanArray.length === 0) {
+                    followedDIV.append("<br /><h2 style='color: #333;'>该用户暂无粉丝。</h2>");
                 }
             }
         });
@@ -179,9 +197,12 @@
             if (result.status) {
                 attentionArray = result.data;
                 $("#numberOfFollowing").html(result.data.length);
+                var followedDIV = $("#followingDIV");
                 for (var i = 0; i < attentionArray.length; i++) {
-                    var followedDIV = $("#followingDIV");
-                    followedDIV.append("<img src='./images/user3.png'/><div>" + attentionArray[i].userName + "</div>");
+                    followedDIV.append("<div class='user-box-item'><img src='./images/user3.png'/><div>" + attentionArray[i].userName + "</div></div>");
+                }
+                if (attentionArray.length === 0) {
+                    followedDIV.append("<br /><h2 style='color: #333;'>该用户暂无关注。</h2>");
                 }
             }
         });
