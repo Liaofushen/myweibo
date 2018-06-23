@@ -99,39 +99,8 @@
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script>
     $(document).ready(function () {
-        $.get(
-            "/news/all",
-            function (data) {
-                var htm = "<table class=\"table table-bordered\"><thead><tr><th>微博内容</th><th>微博发布时间</th><th>微博Id</th></tr></thead><tbody>";
-                var item = data.data;
-                console.log(item);
-                for (var i = 0; i < item.length; i++) {
-                    htm += '<tr><td>' + item[i].newsText + '</td><td>'
-                        + item[i].newsTime + '</td><td>'
-                        + item[i].newsId + '</td><td>'
-                        + '<td> <button type="button" class="btn btn-sm" onclick="deletenews(' + item[i].newsId + ')">删除 </button></td>';
-                }
-                htm += '</tr></tbody></table>';
-                $("#div_shownews").append(htm);
-            });
-        $.get(
-            "/user/all",
-            function (data) {
-                var htm = "<div class=\"navbar-form navbar-left\" role=\"search\"><div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"username\"/></div><button type=\"submit\" class=\"btn btn-default\">搜索</button></div>";
-                htm += "<table class=\"table table-bordered\"><thead><tr><th>用户名</th><th>昵称</th><th>性别</th><th>年龄</th><th>加入微博时间</th></tr></thead><tbody>";
-                var item = data.data;
-                console.log(item);
-                for (var i = 0; i < item.length; i++) {
-                    htm += '<tr><td>' + item[i].userId + '</td><td>'
-                        + item[i].userName + '</td><td>'
-                        + item[i].userSex + '</td><td>'
-                        + item[i].userAge + '</td><td>'
-                        + item[i].userTime + '</td><td>'
-                        + '<td> <button type="button" class="btn btn-sm" onclick="deleteuser('+ item[i].userId + ')">删除 </button></td>';
-                }
-                htm += '</tr></tbody></table>';
-                $("#div_showuser").append(htm);
-            });
+
+
         $("#button_login").click(function () {
             $.post(
                 "/manager/login",
@@ -157,16 +126,47 @@
         });
         $("#button_managernews").click(function () {
             $("#div_managernews").show();
-
             $("#div_manageruser").hide();
             $("#div_createmanager").hide();
+            $.get(
+                "/news/all",
+                function (data) {
+                    var htm = "<table class=\"table table-bordered\"><thead><tr><th>微博内容</th><th>微博发布时间</th><th>微博Id</th></tr></thead><tbody>";
+                    var item = data.data;
+                    console.log(item);
+                    for (var i = 0; i < item.length; i++) {
+                        htm += '<tr><td>' + item[i].newsText + '</td><td>'
+                            + item[i].newsTime + '</td><td>'
+                            + item[i].newsId + '</td><td>'
+                            + '<td> <button type="button" class="btn btn-sm" onclick="deletenews(' + item[i].newsId + ')">删除 </button></td>';
+                    }
+                    htm += '</tr></tbody></table>';
+                    $("#div_shownews").html(htm);
+                });
+
         });
 
         $("#button_manageruser").click(function () {
             $("#div_managernews").hide();
-
             $("#div_manageruser").show();
             $("#div_createmanager").hide();
+            $.get(
+                "/user/all",
+                function (data) {
+                    var htm = "<table class=\"table table-bordered\"><thead><tr><th>用户名</th><th>昵称</th><th>性别</th><th>年龄</th><th>加入微博时间</th></tr></thead><tbody>";
+                    var item = data.data;
+                    console.log(item);
+                    for (var i = 0; i < item.length; i++) {
+                        htm += '<tr><td>' + item[i].userId + '</td><td >'
+                            + item[i].userName + '</td><td >'
+                            + item[i].userSex + '</td><td >'
+                            + item[i].userAge + '</td><td >'
+                            + item[i].userTime + '</td><td>'
+                            + '<td> <button type="button" class="btn btn-sm" onclick="deleteuser('+ item[i].userId + ')">删除 </button></td>';
+                    }
+                    htm += '</tr></tbody></table>';
+                    $("#div_showuser").html(htm);
+                });
         });
         $("#button_createmanager").click(function () {
             $("#div_managernews").hide();
@@ -191,10 +191,60 @@
     });
 
     function deletenews(newsid) {
-        window.location.href = "/news/delete/" + newsid;
+        $.post(
+            "/news/delete/" + newsid,
+            {
+                newsid: newsid
+            },
+            function (result) {
+                if(result.status) {
+                    alert("删除成功");
+                    $.get(
+                        "/news/all",
+                        function (data) {
+                            var htm = "<table class=\"table table-bordered\"><thead><tr><th>微博内容</th><th>微博发布时间</th><th>微博Id</th></tr></thead><tbody>";
+                            var item = data.data;
+                            console.log(item);
+                            for (var i = 0; i < item.length; i++) {
+                                htm += '<tr><td>' + item[i].newsText + '</td><td>'
+                                    + item[i].newsTime + '</td><td>'
+                                    + item[i].newsId + '</td><td>'
+                                    + '<td> <button type="button" class="btn btn-sm" onclick="deletenews(' + item[i].newsId + ')">删除 </button></td>';
+                            }
+                            htm += '</tr></tbody></table>';
+                            $("#div_shownews").html(htm);
+                        });
+                }
+            });
     }
-    function deleteuser(managerid) {
-        window.location.href = "/user/delete/" + managerid;
+    function deleteuser(userid) {
+         $.post(
+             "/user/delete/"+userid,
+              {
+                  userid: userid
+              },
+             function (result) {
+                 if(result.status) {
+                     alert("删除成功");
+                     $.get(
+                         "/user/all",
+                         function (data) {
+                             var htm = "<table class=\"table table-bordered\"><thead><tr><th>用户名</th><th>昵称</th><th>性别</th><th>年龄</th><th>加入微博时间</th></tr></thead><tbody>";
+                             var item = data.data;
+                             console.log(item);
+                             for (var i = 0; i < item.length; i++) {
+                                 htm += '<tr><td>' + item[i].userId + '</td><td >'
+                                     + item[i].userName + '</td><td >'
+                                     + item[i].userSex + '</td><td >'
+                                     + item[i].userAge + '</td><td >'
+                                     + item[i].userTime + '</td><td>'
+                                     + '<td> <button type="button" class="btn btn-sm" onclick="deleteuser('+ item[i].userId + ')">删除 </button></td>';
+                             }
+                             htm += '</tr></tbody></table>';
+                             $("#div_showuser").html(htm);
+                         });
+                 }
+             });
     }
 </script>
 </body>
