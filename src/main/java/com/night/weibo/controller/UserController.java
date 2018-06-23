@@ -111,11 +111,14 @@ public class UserController {
      * @return
      */
     @PostMapping("/update")
-    public Result update(User user, @RequestParam(value = "photo", required = false) MultipartFile file, BindingResult bindingResult) {
+    public Result update(User user, @RequestParam(value = "photo", required = false) MultipartFile file, @RequestParam(value = "oldUserPass", required = false) String oldUserPass, BindingResult bindingResult) {
         if (user.getUserId() == null) {
             return ResultUtils.error("userId 不空为空");
         } else {
             User user1 = userService.findById(user.getUserId());
+            if (oldUserPass != null && !oldUserPass .equals( user1.getUserPass())) {
+                return ResultUtils.error("旧密码错误");
+            }
             if (user.getUserName() == null) user.setUserName(user1.getUserName());
             if (user.getUserPass() == null) user.setUserPass(user1.getUserPass());
             if (user.getUserTime() == null) user.setUserTime(user1.getUserTime());
@@ -123,29 +126,6 @@ public class UserController {
             if (user.getUserSex() == null) user.setUserSex(user1.getUserSex());
             if (user.getUserAge() == null) user.setUserAge(user1.getUserAge());
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
-            session.setAttribute("user", user);
-            return ResultUtils.success(userService.save(user));
-        }
-    }
-    /**
-     * 修改资料，无上传头像时
-     *
-     * @param user
-     * @param bindingResult
-     * @return
-     */
-    @PostMapping("/updateWithoutPhoto")
-    public Result update(User user, BindingResult bindingResult) {
-        if (user.getUserId() == null) {
-            return ResultUtils.error("userId 不空为空");
-        } else {
-            User user1 = userService.findById(user.getUserId());
-            if (user.getUserName() == null) user.setUserName(user1.getUserName());
-            if (user.getUserPass() == null) user.setUserPass(user1.getUserPass());
-            if (user.getUserTime() == null) user.setUserTime(user1.getUserTime());
-            if (user.getUserPhoto() == null) user.setUserPhoto(user1.getUserPhoto());
-            if (user.getUserSex() == null) user.setUserSex(user1.getUserSex());
-            if (user.getUserAge() == null) user.setUserAge(user1.getUserAge());
             session.setAttribute("user", user);
             return ResultUtils.success(userService.save(user));
         }
