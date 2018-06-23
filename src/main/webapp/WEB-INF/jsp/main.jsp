@@ -61,6 +61,38 @@
             line-height: 70px;
             font-size: 30px;
         }
+        #settingDIV {
+            width: 624px;
+        }
+        #setting-Inner {
+            width: 100%;
+            text-align: center;
+            box-shadow: 0px 3px 6px rgba(35, 35, 36, 0.75);
+            background-color: #0f0f0f;
+            border-radius: 5px;
+        }
+        #changePasswordDIV {
+            width: 628px;
+        }
+        #changePassword-Inner {
+            width: 100%;
+            text-align: center;
+            box-shadow: 0px 3px 6px rgba(35, 35, 36, 0.75);
+            background-color: #0f0f0f;
+            border-radius: 5px;
+        }
+        .up-btn{
+            cursor: pointer;
+            padding: 0;
+            font-size: 18px;
+            margin-top: 22px;
+            width: 320px;
+            height: 42px;
+            background: #1a910a;
+            border-radius: 4px;
+            text-align: center;
+            color: #FFF;
+        }
     </style>
 </head>
 <body>
@@ -94,7 +126,7 @@
                         <ul>
                             <li class="panel1" onclick="showDivAndHideOther(4)"><a>设置</a></li>
                             <li class="panel2"><a href="/user/logout">退出</a></li>
-                            <li class="panel2"><a href="/user/changePassPage">更改密码</a></li>
+                            <li class="panel2" onclick="showDivAndHideOther(5)"><a>更改密码</a></li>
                         </ul>
                     </div>
                 </li>
@@ -109,6 +141,7 @@
         <div onclick="showDivAndHideOther(2)" class="nav-item"><a>关注</a></div>
         <div onclick="showDivAndHideOther(3)" class="nav-item"><a>说说</a></div>
         <div class="nav-item setting-Nav" onclick="showDivAndHideOther(4)"><a>设置</a></div>
+        <div class="nav-item setting-Nav" onclick="showDivAndHideOther(5)"><a>更改密码</a></div>
     </div>
     <div style="display: none;" id="mainDIV" class="content"></div>
     <div style="display: none;" id="followedDIV"></div>
@@ -116,14 +149,52 @@
     <div style="display: none;width: 624px;height: 1000px;" id="publishDIV"></div>
     <div style="display: none;" id="settingDIV">
         <br />
-        <h2 style="color: #333;">设置</h2>
+        <h2 style="color: #333;">设置</h2><br />
+        <div id="setting-Inner">
+            <br />
+            <div>
+                <span class="input-group-addon">名称</span>
+                <input type="text" class="form-control" id="setting-Name" value="${sessionScope.user.userName}">
+            </div><br />
+            <div>
+                <span class="input-group-addon">年龄</span>
+                <input type="text" class="form-control" id="setting-Age" value="${sessionScope.user.userAge}">
+            </div><br />
+            <div>
+                <input id="setting-SexFirst" type="radio" name="setting-Sex" value="0"/><label for="setting-SexFirst">男</label>
+                <input id="setting-SexSecond" type="radio" name="setting-Sex" value="1"/><label for="setting-SexSecond">女</label>
+            </div>
+            <button onclick="doSaveUserInfo()" class="up-btn">保存信息</button><br /><br /><br />
+        </div>
+    </div>
+    <div style="display: none;"  id="changePasswordDIV">
+        <br />
+        <h2 style="color: #333;">更改密码</h2><br />
+        <div id="changePassword-Inner">
+            <br />
+            <div>
+                <span>旧 密 码</span>
+                <input type="text" class="form-control" id="changePassword-Old">
+            </div><br />
+            <br />
+            <div>
+                <span>新 密 码</span>
+                <input type="text" class="form-control" id="changePassword-New">
+            </div><br />
+            <br />
+            <div>
+                <span>再次输入</span>
+                <input type="text" class="form-control" id="changePassword-NewAgain">
+            </div><br />
+            <button onclick="doChangePassword()" class="up-btn">更改密码</button><br /><br /><br />
+        </div>
     </div>
 </div>
 <div class="p-info">
     <div class="p-icon">
         <img src="/photo/${sessionScope.user.userPhoto}" alt="picon" style="width: 100px;height: 100px">
     </div>
-    <div class="p-name"><a href="/homepage/myOwn?username=${sessionScope.user.userName}">${sessionScope.user.userName}</a></div>
+    <div class="p-name"><a>${sessionScope.user.userName}</a></div>
     <div class="p-profile">
         <ul>
             <li><a onclick="showDivAndHideOther(1)">
@@ -164,8 +235,17 @@
     var fanArray;
     var attentionArray;
     var newsArray;
-    var divArray = [$("#mainDIV"), $("#followedDIV"), $("#followingDIV"), $("#publishDIV"), $("#settingDIV")];
+    var divArray = [$("#mainDIV"), $("#followedDIV"), $("#followingDIV"), $("#publishDIV"), $("#settingDIV"), $("#changePasswordDIV")];
     var showDivAndHideOther = function(index) {
+        (function () {
+            var userSex = ${sessionScope.user.userSex};
+            if (userSex) {
+                $("#setting-SexFirst").attr("checked", "checked");
+            }
+            else {
+                $("#setting-SexSecond").attr("checked", "checked");
+            }
+        })();
         divArray.forEach(function (value, index2, array) {
             if (index2 !== index) {
                 value.hide();
@@ -174,6 +254,59 @@
             else {
                 value.show();
                 $(".nav-item").eq(index2).css("background-color", "#555555");
+            }
+        });
+    };
+    var doChangePassword = function () {
+        var changePasswordOld = $("#changePassword-Old").val();
+        var changePasswordNew = $("#changePassword-New").val();
+        var changePasswordNewAgain = $("#changePassword-NewAgain").val();
+        if (changePasswordOld.length < 3 || changePasswordNew.length < 3) {
+            alert("情保证输入的长度大于3。");
+        }
+        if (changePasswordNew !== changePasswordNewAgain) {
+            alert("请保证两次密码输入一致。")
+        }
+        var changePasswordJSON = {userId: ${sessionScope.user.userId}, oldUserPass: changePasswordOld, userPass: changePasswordNew};
+        console.log(changePasswordJSON);
+        $.post("/user/update", changePasswordJSON, function (result) {
+            if (result.status) {
+                alert("更改密码成功。");
+            }
+            else {
+                alert(result.msg);
+            }
+        });
+    };
+    var doSaveUserInfo = function () {
+        var settingName = $("#setting-Name").val();
+        if (settingName.length < 3) {
+            alert("姓名：请输入大于三位的名字");
+            return;
+        }
+        var settingAge = Number($("#setting-Age").val());
+        if (settingAge == null || isNaN(settingAge) || settingAge === 0) {
+            alert("年龄：请输入纯数字或至少输入1个非0数字");
+            return;
+        }
+        var sex;
+        if ($('input[name="setting-Sex"]:checked').val() === "0") {
+            sex = true;
+        }
+        else {
+            sex = false;
+        }
+        var settingJSON = {
+            userName: settingName, userAge: settingAge, userSex: sex, usePass: ${sessionScope.user.userPass}, userId: ${sessionScope.user.userId},
+            photo: null
+        };
+        console.log(settingJSON);
+        $.post("/user/update", settingJSON, function (result) {
+            if (result.status) {
+                alert("修改成功。");
+            }
+            else {
+                alert(result.msg);
             }
         });
     };
