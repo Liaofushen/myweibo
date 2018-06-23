@@ -96,6 +96,11 @@
     </style>
 </head>
 <body>
+<c:if test="${empty sessionScope.get('user')}">
+    <script>
+        window.location.href = "/signin";
+    </script>
+</c:if>
 <div class="header">
     <div class="headerbar">
         <h1 class="logo">
@@ -125,7 +130,7 @@
                     <div class="account-panel">
                         <ul>
                             <li class="panel1" onclick="showDivAndHideOther(4)"><a>设置</a></li>
-                            <li class="panel2"><a href="/user/logout">退出</a></li>
+                            <li class="panel2" onclick="doLogout()"><a>退出</a></li>
                             <li class="panel2" onclick="showDivAndHideOther(5)"><a>更改密码</a></li>
                         </ul>
                     </div>
@@ -174,17 +179,17 @@
             <br />
             <div>
                 <span>旧 密 码</span>
-                <input type="text" class="form-control" id="changePassword-Old">
+                <input type="password" class="form-control" id="changePassword-Old">
             </div><br />
             <br />
             <div>
                 <span>新 密 码</span>
-                <input type="text" class="form-control" id="changePassword-New">
+                <input type="password" class="form-control" id="changePassword-New">
             </div><br />
             <br />
             <div>
                 <span>再次输入</span>
-                <input type="text" class="form-control" id="changePassword-NewAgain">
+                <input type="password" class="form-control" id="changePassword-NewAgain">
             </div><br />
             <button onclick="doChangePassword()" class="up-btn">更改密码</button><br /><br /><br />
         </div>
@@ -254,6 +259,16 @@
             else {
                 value.show();
                 $(".nav-item").eq(index2).css("background-color", "#555555");
+            }
+        });
+    };
+    var doLogout = function () {
+        $.get("/user/logout", function (result) {
+            if (result.status) {
+                window.location.href = "/signin";
+            }
+            else {
+                alert(result.msg);
             }
         });
     };
