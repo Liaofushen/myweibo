@@ -35,7 +35,12 @@ public class NewsService {
     }
 
     public List<News> findAll() {
-        return newsDao.findAll();
+
+        List<News> newsList = newsDao.findAll();
+        newsList.sort((o1, o2)->{
+            return o2.getNewsTime().compareTo(o1.getNewsTime());
+        });
+        return newsList;
     }
 
     @Transactional
@@ -53,7 +58,11 @@ public class NewsService {
     }
 
     public List<News> findByUserId(Integer userId) {
-        return newsDao.findByUserId(userId);
+        List<News> newsList = newsDao.findByUserId(userId);
+        newsList.sort((o1, o2)->{
+            return o2.getNewsTime().compareTo(o1.getNewsTime());
+        });
+        return newsList;
     }
 
 }
