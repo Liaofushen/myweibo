@@ -36,6 +36,6 @@ public class IndexController {
     public String viewUser(@PathVariable Integer userId, ModelMap modelMap) {
         User user = userService.findById(userId);
         modelMap.addAttribute("viewUser", user);
-        return "/user";
+        return "/view";
     }
 }

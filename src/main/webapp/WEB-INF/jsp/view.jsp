@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Cache-Control" content="no-cache">
 
-    <title>首页</title>
+    <title>${viewUser.userName}的微博</title>
     <link rel="shortcunt icon" type="/image/x-icon" href="/static/images/favicon.ico">
     <link rel="stylesheet" href="/static/css/common.css">
     <link type="text/css" rel="stylesheet" href="/static/css/index.css">
@@ -96,110 +96,61 @@
     </style>
 </head>
 <body>
-<c:if test="${empty sessionScope.get('user')}">
-    <script>
-        window.location.href = "/signin";
-    </script>
-</c:if>
 <div class="header">
     <div class="headerbar">
         <h1 class="logo">
             <a href="index">微博系统</a>
         </h1>
         <div class="publish">
-            <a href="javascript:void(0);">发布</a>
+            <c:choose>
+                <c:when test="${empty sessionScope.get('user')}">
+                    <a href="/signin">登陆</a>
+                </c:when>
+            </c:choose>
         </div>
         <div class="nav">
             <ul>
-                <!--<li>
-                    <form action="/search" method="post">
-                        <input type="text" name="search"/>
-                        <input type="submit" value="搜索" style="height: 25px"/>
-                    </form>
-                </li>-->
-                <li>
-                    <a>私信</a>
-                    <div class="num">6</div>
-                </li>
-                <li>
-                    <a>通知</a>
-                    <div class="num">14</div>
-                </li>
-                <li class="account">
-                    <h3><a href="/main">${sessionScope.user.userName}</a></h3>
-                    <div class="account-panel">
-                        <ul>
-                            <li class="panel1" onclick="showDivAndHideOther(4)"><a>设置</a></li>
-                            <li class="panel2" onclick="doLogout()"><a>退出</a></li>
-                            <li class="panel2" onclick="showDivAndHideOther(5)"><a>更改密码</a></li>
-                        </ul>
-                    </div>
-                </li>
+                <c:choose>
+                    <c:when test="${empty sessionScope.get('user')}">
+                            </c:when>
+                    <c:otherwise>
+                        <li>
+                            <a>私信</a>
+                            <div class="num">6</div>
+                        </li>
+                        <li>
+                            <a>通知</a>
+                            <div class="num">14</div>
+                        </li>
+                        <li class="account">
+                            <h3><a href="/main">${sessionScope.user.userName}</a></h3>
+                            <div class="account-panel">
+                                <ul>
+                                    <li class="panel1" onclick="doLogout()"><a>退出</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
             </ul>
         </div>
     </div>
 </div>
 <div class="main">
     <div class="main-nav">
-        <div onclick="showDivAndHideOther(0)" class="nav-item"><a>主页</a></div>
+        <div onclick="showDivAndHideOther(0)" class="nav-item"><a>说说</a></div>
         <div onclick="showDivAndHideOther(1)" class="nav-item"><a>粉丝</a></div>
         <div onclick="showDivAndHideOther(2)" class="nav-item"><a>关注</a></div>
-        <div onclick="showDivAndHideOther(3)" class="nav-item"><a>说说</a></div>
-        <div class="nav-item setting-Nav" onclick="showDivAndHideOther(4)"><a>设置</a></div>
-        <div class="nav-item setting-Nav" onclick="showDivAndHideOther(5)"><a>更改密码</a></div>
     </div>
-    <div style="display: none;" id="mainDIV" class="content"></div>
+    <div style="display: none;width: 624px;height: 1000px;" id="publishDIV"></div>
     <div style="display: none;" id="followedDIV"></div>
     <div style="display: none;" id="followingDIV"></div>
-    <div style="display: none;width: 624px;height: 1000px;" id="publishDIV"></div>
-    <div style="display: none;" id="settingDIV">
-        <br />
-        <h2 style="color: #333;">设置</h2><br />
-        <div id="setting-Inner">
-            <br />
-            <div>
-                <span class="input-group-addon">名称</span>
-                <input type="text" class="form-control" id="setting-Name" value="${sessionScope.user.userName}">
-            </div><br />
-            <div>
-                <span class="input-group-addon">年龄</span>
-                <input type="text" class="form-control" id="setting-Age" value="${sessionScope.user.userAge}">
-            </div><br />
-            <div>
-                <input id="setting-SexFirst" type="radio" name="setting-Sex" value="0"/><label for="setting-SexFirst">男</label>
-                <input id="setting-SexSecond" type="radio" name="setting-Sex" value="1"/><label for="setting-SexSecond">女</label>
-            </div>
-            <button onclick="doSaveUserInfo()" class="up-btn">保存信息</button><br /><br /><br />
-        </div>
-    </div>
-    <div style="display: none;"  id="changePasswordDIV">
-        <br />
-        <h2 style="color: #333;">更改密码</h2><br />
-        <div id="changePassword-Inner">
-            <br />
-            <div>
-                <span>旧 密 码</span>
-                <input type="password" class="form-control" id="changePassword-Old">
-            </div><br />
-            <br />
-            <div>
-                <span>新 密 码</span>
-                <input type="password" class="form-control" id="changePassword-New">
-            </div><br />
-            <br />
-            <div>
-                <span>再次输入</span>
-                <input type="password" class="form-control" id="changePassword-NewAgain">
-            </div><br />
-            <button onclick="doChangePassword()" class="up-btn">更改密码</button><br /><br /><br />
-        </div>
-    </div>
 </div>
 <div class="p-info">
     <div class="p-icon">
-        <img src="/photo/${sessionScope.user.userPhoto}" alt="picon" style="width: 100px;height: 100px">
+        <img src="/photo/${viewUser.userPhoto}" alt="picon" style="width: 100px;height: 100px">
     </div>
-    <div class="p-name"><a>${sessionScope.user.userName}</a></div>
+    <div class="p-name"><a>${viewUser.userName}</a></div>
     <div class="p-profile">
         <ul>
             <li><a onclick="showDivAndHideOther(1)">
@@ -210,7 +161,7 @@
                 <span>关注</span>
                 <span id="numberOfFollowing" class="p-following">--</span>
             </a></li>
-            <li><a onclick="showDivAndHideOther(3)">
+            <li><a onclick="showDivAndHideOther(0)">
                 <span>说说</span>
                 <span id="numberOfPublish" class="p-publish">--</span>
             </a></li>
@@ -219,37 +170,12 @@
 </div>
 </div>
 <a id="gotop" href="#">回到顶部</a>
-<!-- 发布布局 -->
-<div class="opacity-bg" style="display:none"></div>
-<div class="post" style="display:none;top:100px;left:200px;">
-    <div class="post-title">说点什么</div>
-    <div class="post-close">关闭</div>
-    <div class="post-input">
-        <div>
-            <textarea id="publishNewsText" name="newstext"></textarea>
-            <input id="publishPhoto" type="file" class="file" name="photo" accept="image/jpeg"/>
-            <button onclick="onPublish();" class="post-btn">提 交</button>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript" src="/static/js/publish.js"></script>
-<script type="text/javascript" src="/static/js/index.js"></script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
     var fanArray;
     var attentionArray;
     var newsArray;
-    var divArray = [$("#mainDIV"), $("#followedDIV"), $("#followingDIV"), $("#publishDIV"), $("#settingDIV"), $("#changePasswordDIV")];
-    (function () {
-        var userSex = ${sessionScope.user.userSex};
-        if (userSex) {
-            $("#setting-SexFirst").attr("checked", "checked");
-        }
-        else {
-            $("#setting-SexSecond").attr("checked", "checked");
-        }
-    })();
+    var divArray = [$("#publishDIV"), $("#followedDIV"), $("#followingDIV")];
     var showDivAndHideOther = function(index) {
         divArray.forEach(function (value, index2, array) {
             if (index2 !== index) {
@@ -272,53 +198,11 @@
             }
         });
     };
-    var doChangePassword = function () {
-        var changePasswordOld = $("#changePassword-Old").val();
-        var changePasswordNew = $("#changePassword-New").val();
-        var changePasswordNewAgain = $("#changePassword-NewAgain").val();
-        if (changePasswordOld.length < 3 || changePasswordNew.length < 3) {
-            alert("情保证输入的长度大于3。");
-        }
-        if (changePasswordNew !== changePasswordNewAgain) {
-            alert("请保证两次密码输入一致。")
-        }
-        var changePasswordJSON = {userId: ${sessionScope.user.userId}, oldUserPass: changePasswordOld, userPass: changePasswordNew};
-        console.log(changePasswordJSON);
-        $.post("/user/update", changePasswordJSON, function (result) {
+    var doAttention = function (userFirst) {
+        var userId = ${viewUser.userId};
+        $.post("/user/fans", {userFirst: userFirst, userSecond: userId}, function (result) {
             if (result.status) {
-                alert("更改密码成功。");
-            }
-            else {
-                alert(result.msg);
-            }
-        });
-    };
-    var doSaveUserInfo = function () {
-        var settingName = $("#setting-Name").val();
-        if (settingName.length < 3) {
-            alert("姓名：请输入大于三位的名字");
-            return;
-        }
-        var settingAge = Number($("#setting-Age").val());
-        if (settingAge == null || isNaN(settingAge) || settingAge === 0) {
-            alert("年龄：请输入纯数字或至少输入1个非0数字");
-            return;
-        }
-        var sex;
-        if ($('input[name="setting-Sex"]:checked').val() === "0") {
-            sex = true;
-        }
-        else {
-            sex = false;
-        }
-        var settingJSON = {
-            userName: settingName, userAge: settingAge, userSex: sex, usePass: ${sessionScope.user.userPass}, userId: ${sessionScope.user.userId},
-            photo: null
-        };
-        console.log(settingJSON);
-        $.post("/user/update", settingJSON, function (result) {
-            if (result.status) {
-                alert("修改成功。");
+                window.location.reload();
             }
             else {
                 alert(result.msg);
@@ -327,7 +211,32 @@
     };
     $(document).ready(function () {
         $(".nav-item").eq(0).click();
-        var userId = ${sessionScope.user.userId};
+        var userId = ${viewUser.userId};
+        var account = $(".account");
+        if (account.length > 0) {
+            console.log("on login");
+            var loginId = "${sessionScope.user.userId}";
+            loginId = Number(loginId);
+            if (userId === loginId) {
+                window.location.href = "/main";
+            }
+            $.get("/user/attention/" + loginId, function (result) {
+                if (result.status) {
+                    var found = false;
+                    for (var i = 0; i < result.data.length; i++) {
+                        if (result.data[i].userId === userId) {
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        $(".publish").html("<a>取关</a>");
+                    }
+                    else {
+                        $(".publish").html("<a onclick='doAttention(" + loginId + ")'>关注</a>");
+                    }
+                }
+            });
+        }
         $.get("/user/fans/" + userId, function (result) {
             if (result.status) {
                 fanArray = result.data;
@@ -358,12 +267,7 @@
             if (result.status) {
                 newsArray = result.data;
                 $("#numberOfPublish").html(result.data.length);
-                getAndShowNews(result, $("#publishDIV"), 2);
-            }
-        });
-        $.get("/news/all", function (result) {
-            if (result.status) {
-                getAndShowNews(result, $(".content"), 1);
+                getAndShowNews(result, $("#publishDIV"));
             }
         });
     });
@@ -442,20 +346,6 @@
             content.append(item);
         }
     };
-    //发布
-    var onPublish = function () {
-        var userId = ${sessionScope.user.userId};
-        var publishNewsText = $("#publishNewsText").val();
-        $.post("/news/createWithoutPhoto", {userId: userId, newsText: publishNewsText}, function (result) {
-            if (result.status) {
-                console.log("suc");
-                window.location.reload();
-            }
-            else {
-                console.log(result.msg);
-            }
-        });
-    }
     //喜欢
     function like(newsId, newsLike) {
         $.post("/news/like/" + newsId, {newsId: newsId}, function (result) {
@@ -476,9 +366,14 @@
     }
     //执行评论
     function doComment(newsId) {
-        var userId = ${sessionScope.user.userId};
+        var userId = "${sessionScope.user.userId}";
+        if (userId == "") {
+            alert("请先登陆。")
+            return;
+        }
+        userId = Number(userId);
         var text = $("#cnt" + newsId).html();
-       $.post("/comment/create", {commentText: text, newsId: newsId, userId: userId}, function (result) {
+        $.post("/comment/create", {commentText: text, newsId: newsId, userId: userId}, function (result) {
             if (result.status) {
                 console.log("suc");
                 var repeatList = $("#repeatID" + newsId );
@@ -487,7 +382,7 @@
                     "</div>";
                 var repeatContent = $("<div class=\"repeat-content\"></div>");
                 var repeatContentText = $("<div class=\"repeat-content-text\">" +
-                    "<a href=\"/view/" + result.data.user.userId + "\">" + result.data.user.userName + "</a> : " +
+                    "<a href=\"javascript:void(0);\">" + result.data.user.userName + "</a> : " +
                     result.data.commentText +
                     "</div>");
                 var repeatContentFunc = $("<div class=\"repeat-content-func\">" +
