@@ -145,7 +145,6 @@ public class UserController {
             if (user.getUserPhoto() == null) user.setUserPhoto(user1.getUserPhoto());
             if (user.getUserSex() == null) user.setUserSex(user1.getUserSex());
             if (user.getUserAge() == null) user.setUserAge(user1.getUserAge());
-            user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
             return ResultUtils.success(userService.save(user));
         }
     }
