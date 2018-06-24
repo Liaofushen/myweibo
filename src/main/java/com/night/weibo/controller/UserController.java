@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @ProjectName: weibo
@@ -36,6 +37,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    private static Logger logger = Logger.getLogger(UserController.class.toString());
     @Autowired
     private UserService userService;
     @Autowired
@@ -91,11 +93,13 @@ public class UserController {
      */
     @PostMapping("/register")
     public Result register(@Valid User user, @RequestParam(value = "photo", required = false) MultipartFile file, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         } else if (userService.hasId(user.getUserId())) {
             return ResultUtils.error("该用户账号已经存在");
         } else {
+            logger.info(user.toString() + "注册");
             user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
             user.setUserTime(new Date(System.currentTimeMillis()));
             return ResultUtils.success(userService.save(user));
@@ -126,6 +130,7 @@ public class UserController {
             if (user.getUserSex() == null) user.setUserSex(user1.getUserSex());
             if (user.getUserAge() == null) user.setUserAge(user1.getUserAge());
             if (file != null) user.setUserPhoto(PhotoUtils.save(file, user.getUserId()));
+            logger.info(user.toString() + "更新");
             session.setAttribute("user", user);
             return ResultUtils.success(userService.save(user));
         }
@@ -144,6 +149,7 @@ public class UserController {
 
     @PostMapping("/delete/{userId}")
     public Result delete(@PathVariable Integer userId) {
+        logger.info(userId.toString() + "注销");
         userService.deleteById(userId);
         return ResultUtils.success();
     }

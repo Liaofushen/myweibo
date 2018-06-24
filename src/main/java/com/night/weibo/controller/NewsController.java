@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.logging.Logger;
 
 /**
  * @ProjectName: weibo
@@ -30,6 +31,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("/news")
 public class NewsController {
+    private static Logger logger = Logger.getLogger(NewsController.class.toString());
     @Autowired
     private NewsService newsService;
 
@@ -78,6 +80,7 @@ public class NewsController {
      */
     @PostMapping("/like/{id}")
     public Result like(@PathVariable Integer id) {
+        logger.info(id.toString() + "被点赞");
         News news = newsService.findById(id);
         news.setNewsLike(news.getNewsLike() == null ? 1 : news.getNewsLike() + 1);
         return ResultUtils.success(newsService.save(news));
@@ -93,6 +96,7 @@ public class NewsController {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         }
+        logger.info(news.toString() + "新建");
         news.setNewsLike(0);
         news.setUser(userService.findById(userId));
         news.setNewsPhoto(PhotoUtils.save(file, userId));
@@ -109,6 +113,7 @@ public class NewsController {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         }
+        logger.info(news.toString() + "新建");
         news.setNewsLike(0);
         news.setUser(userService.findById(userId));
         news.setNewsTime(new Date(System.currentTimeMillis()));
@@ -117,6 +122,7 @@ public class NewsController {
 
     @PostMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
+        logger.info(id.toString() + "删除");
         newsService.delete(id);
         return ResultUtils.success();
     }

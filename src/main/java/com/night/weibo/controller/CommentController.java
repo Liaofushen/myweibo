@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.logging.Logger;
 
 /**
  * @ProjectName: weibo
@@ -28,6 +29,7 @@ import java.sql.Timestamp;
 @RestController
 @RequestMapping("/comment")
 public class CommentController {
+    private static Logger logger = Logger.getLogger(CommentController.class.toString());
     @Autowired
     private CommentService commentService;
     @Autowired
@@ -77,6 +79,7 @@ public class CommentController {
         if (bindingResult.hasErrors()) {
             return ResultUtils.error(bindingResult.getFieldError().getDefaultMessage());
         }
+        logger.info(comment.toString() + "新建");
         comment.setUser(userService.findById(userId));
         comment.setNews(newsService.findById(newsId));
         comment.setCommentTime(new Timestamp(System.currentTimeMillis()));
@@ -91,6 +94,7 @@ public class CommentController {
      */
     @PostMapping("/delete/{commentId}")
     public Result delete(@PathVariable Integer commentId) {
+        logger.info(commentId.toString() + "删除");
         commentService.delete(commentId);
         return ResultUtils.success();
     }

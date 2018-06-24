@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @ProjectName: weibo
@@ -29,6 +30,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/manager")
 public class ManagerController {
+    private static Logger logger = Logger.getLogger(ManagerController.class.toString());
     @Autowired
     private ManagerService managerService;
     @Autowired
@@ -68,6 +70,7 @@ public class ManagerController {
             if (managerService.hasId(manager.getManagerId())) {
                 return ResultUtils.error("账号已存在");
             } else {
+                logger.info(manager.toString() + "注册");
                 session.setAttribute("manager", manager);
                 return ResultUtils.success(managerService.save(manager));
             }
@@ -75,6 +78,7 @@ public class ManagerController {
     }
     @PostMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
+        logger.info(id.toString() + "删除");
         managerService.delete(id);
         return ResultUtils.success();
     }
