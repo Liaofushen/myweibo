@@ -2,7 +2,6 @@ package com.night.weibo.controller;
 
 import com.night.weibo.domain.User;
 import com.night.weibo.service.UserService;
-import com.night.weibo.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,13 +19,15 @@ public class IndexController {
     }
 
     @GetMapping("/back")
-    public String back(){
+    public String back() {
         return "/back/index";
     }
+
     @GetMapping("/signin")
     public String signin() {
         return "/signin";
     }
+
     @GetMapping("/main")
     public String main() {
         return "/main";
@@ -36,6 +37,6 @@ public class IndexController {
     public String viewUser(@PathVariable Integer userId, ModelMap modelMap) {
         User user = userService.findById(userId);
         modelMap.addAttribute("viewUser", user);
-        return "/user";
+        return "/view";
     }
 }
